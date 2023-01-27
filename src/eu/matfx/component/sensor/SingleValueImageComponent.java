@@ -51,7 +51,7 @@ public class SingleValueImageComponent extends Region
 	private double width_component = 90;
 	private double height_component = 100;
 	
-	private ButtonRectangle button_down, button_up;
+	protected ButtonRectangle button_down, button_up;
 	
 	/**
 	 * Wert der später in der Anzeige erscheint
