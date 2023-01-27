@@ -26,7 +26,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-
+/**
+ * simple sensor component with two buttons to change the view
+ * @author m.goerlich
+ *
+ */
 public class GlassPaneSensor extends Region
 {
 	public enum StopIndizes
@@ -36,12 +40,13 @@ public class GlassPaneSensor extends Region
 	
 	private HashMap<StopIndizes, Stop[]> stopMap = new HashMap<StopIndizes, Stop[]>();
 	
-	private Rectangle base_background_component;// button_down, button_up;
+	private Rectangle base_background_component;
 	
 	private Canvas textCanvas;
 	
 	private Canvas imageCanvas;
 	
+	//started dimension from the svg file
 	private double width_component = 90;
 	private double height_component = 100;
 	
@@ -67,7 +72,9 @@ public class GlassPaneSensor extends Region
 	private int MAX_GRADIENT_ALPHA_CHANNEL = 0x80;
 	
 	private SimpleIntegerProperty alphaChannelProperty  = new SimpleIntegerProperty();
-	//Color.web("#5abaa0")
+	
+	
+	//Orginal color Color.web("#5abaa0")
 	private SimpleObjectProperty<Color> baseColor = new SimpleObjectProperty<Color>();
 	
 	public GlassPaneSensor()
@@ -82,24 +89,20 @@ public class GlassPaneSensor extends Region
 	
 	private void initGraphics() 
 	{	
-		
+		//init the color
 		baseColor.set(Color.web("#5abaa0"));
-		
 		baseColor.addListener(new ChangeListener<Color>(){
 
 			@Override
 			public void changed(ObservableValue<? extends Color> observable, Color oldValue, Color newValue) {
 				reColoredComponent();
-				
-				
 			}
 			
 		});
 		
-		
+		//stops for the gradient overlay 
 		Stop[] stopArray = new Stop[]{
 				new Stop(0, Color.web("#ffffff00")),
-				//TODO hier evtl. noch am Alpha Kanal fummeln.
 				new Stop(1, Color.web("#ffffff33"))
 			};
 		stopMap.put(StopIndizes.BASE_BACKGROUND_LINEAR_GRADIENT, stopArray);
@@ -113,15 +116,14 @@ public class GlassPaneSensor extends Region
 					double alphaValueAsDouble = 0;
 					if(newValue.intValue() > 0)
 						alphaValueAsDouble = newValue.intValue() / 255D;
-					System.out.println("alphaValueAsDouble "+ alphaValueAsDouble);
-				
+					
 					Stop endStop = stopMap.get(StopIndizes.BASE_BACKGROUND_LINEAR_GRADIENT)[1];
 					Color colorValue = endStop.getColor();
 					String webColorString = UIToolBox.getWebColorString(colorValue.getRed(), colorValue.getGreen(), colorValue.getBlue(), alphaValueAsDouble);
 				
 					stopMap.get(StopIndizes.BASE_BACKGROUND_LINEAR_GRADIENT)[1] = new Stop(1, Color.web(webColorString));
 					
-					//wird der init umschifft
+					//ignore if the init call
 					if(base_background_component != null)
 						resize();
 					
@@ -131,17 +133,15 @@ public class GlassPaneSensor extends Region
 			}
 			
 		});
+		//init the alphachannel
 		alphaChannelProperty.set(0x33);
 		
+		
 		base_background_component = new Rectangle();
-		//base_background_component.setFill(Color.TRANSPARENT);
-		//TODO
 		base_background_component.setStroke(baseColor.get());
-		//base_background_component.setSmooth(false);
 		
-		
-        //Von außerhalb kann dann verändert werden.
-    	blurRadiusProperty.addListener(new ChangeListener<Number>(){
+		//property to react when the blur is changed
+		blurRadiusProperty.addListener(new ChangeListener<Number>(){
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) 
@@ -180,9 +180,7 @@ public class GlassPaneSensor extends Region
 				{
 					commandProperty.set(Command.RESET_COMMAND);
 					commandProperty.set(Command.NEXT_SENSOR_VALUE);
-					
 				}
-				
 			}
 			
 		});
@@ -219,12 +217,7 @@ public class GlassPaneSensor extends Region
 			}
 			
 		});
-		
-
-		
-		
-		
-		
+	
 	}
 	
 	private void registerListener() 
@@ -237,10 +230,8 @@ public class GlassPaneSensor extends Region
 		width_component = getWidth();
 		height_component = getHeight();
 		
-		//w und h immer auf die volle zugewiesene Breite und Höhe
 		base_background_component.setWidth(width_component);
 		base_background_component.setHeight(height_component);
-		//4px
 		base_background_component.setArcWidth(width_component * 0.044444444444444446);
 		base_background_component.setArcHeight(width_component * 0.044444444444444446);
 		base_background_component.setStrokeWidth(width_component * 0.022222222222222223);
@@ -251,10 +242,6 @@ public class GlassPaneSensor extends Region
 				height_component *  -0.03818700626, 
 				false, CycleMethod.NO_CYCLE, stopMap.get(StopIndizes.BASE_BACKGROUND_LINEAR_GRADIENT));
 		base_background_component.setFill(lg);
-		
-		
-		//als erstes die gezeichnete Fläche leeren
-		//imageCanvas.getGraphicsContext2D().clearRect(imageCanvas.getLayoutX(), imageCanvas.getLayoutY(), imageCanvas.getWidth(), imageCanvas.getHeight());
 		
 		double newX = width_component * 0.23555555562222225;
 		double newY = height_component * 0.09619787962;
@@ -271,10 +258,7 @@ public class GlassPaneSensor extends Region
 		imageCanvas.relocate(newX, newY);
 		
 		refreshImageContent(refresh_w_i, refresh_h_i);
-		
-		//als erstes die gezeichnete Fläche leeren
-		//TODO prüfen wegen dem Clearing eigentlich müsste es dohc funktionieren
-		//textCanvas.getGraphicsContext2D().clearRect(textCanvas.getLayoutX(), textCanvas.getLayoutY(), textCanvas.getWidth(), textCanvas.getHeight());
+	
 		
 		double refresh_w = textCanvas.getWidth();
 		double refresh_h = textCanvas.getHeight();
@@ -285,7 +269,6 @@ public class GlassPaneSensor extends Region
 		newWidth = width_component * 0.966667;
 		newHeight = height_component * 0.51865887269;
 		
-		//System.out.println("new Width " + newWidth + " newHeight " + newHeight);
 		textCanvas.setWidth(newWidth);
 		textCanvas.setHeight(newHeight);
 		textCanvas.relocate(newX, newY);
@@ -311,15 +294,7 @@ public class GlassPaneSensor extends Region
 		double middle_x = newCanvasWidth/2d;
 		double middle_y = newCanvasHeight/2d;
 		
-		
-		//TODO raus text;
-		//gc.setFill(Color.ROSYBROWN);
-		//gc.fillRect(0, 0, newCanvasWidth, newCanvasHeight);
-		
-		
-		
 		Image rawImage = ImageLoader.getImageFromIconFolder(imageFileNameProperty.get());
-		//System.out.println("rawImage " + rawImage.getWidth() + " rawImage "  + rawImage.getHeight());
 		//bei Gleichheit 1
 		//Breite größer dann Wert > 1
 		//Höhe größer dann Wert < 1
@@ -327,7 +302,6 @@ public class GlassPaneSensor extends Region
 	
 		double newIconWidth = newCanvasWidth * 0.9;
 		double newIconHeight = newCanvasHeight * 0.9;
-		//System.out.println("newIconWidth: " + newIconWidth + " newIconHeight: " +newIconHeight );
 		if(ratio == 1)
 		{
 			if(newCanvasWidth <= newCanvasHeight)
@@ -340,7 +314,6 @@ public class GlassPaneSensor extends Region
 				newIconWidth = newIconHeight;
 			}
 		}
-		//TODO ich glaube ist immer gleich
 		else if(ratio < 1)
 		{
 			if(newCanvasWidth <= newCanvasHeight)
@@ -364,10 +337,7 @@ public class GlassPaneSensor extends Region
 			}
 		}
 		
-		//System.out.println("after recalculate " + newIconWidth + "  X " + newIconHeight);
-		
-		//x und y berechnen damit es in der Mitte liegt
-		
+		//calculate x und y to set the image in the middle of the canvas area		
 		double halfedWidth = newIconWidth/2d;
 		
 		double newXLocation = middle_x - halfedWidth;
@@ -384,6 +354,11 @@ public class GlassPaneSensor extends Region
 		
 	}
 
+	/**
+	 * drawing the value of the sensor at the canvas
+	 * @param previous_w
+	 * @param previous_h
+	 */
 	private void refreshLCDContent(double previous_w, double previous_h) 
 	{
 		
@@ -441,6 +416,10 @@ public class GlassPaneSensor extends Region
 		return this.commandProperty;
 	}
 
+	/**
+	 * Property to change the blur of the frame from outside the component
+	 * @return
+	 */
 	public SimpleIntegerProperty getBlurRadiusProperty()
 	{
 		return blurRadiusProperty;
@@ -462,6 +441,10 @@ public class GlassPaneSensor extends Region
 		return MAX_GRADIENT_ALPHA_CHANNEL;
 	}
 	
+	/**
+	 *  Property to change the alpha channel of the base backround (stop values from the linear gradient)
+	 * @return
+	 */
 	public SimpleIntegerProperty getAlphaChannelProperty()
 	{
 		return alphaChannelProperty;
@@ -476,8 +459,6 @@ public class GlassPaneSensor extends Region
 	{
 		this.baseColor.set(colorSelected);
 	}
-
-
 
 	private void reColoredComponent() {
 		base_background_component.setStroke(baseColor.get());

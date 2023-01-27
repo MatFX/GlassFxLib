@@ -29,7 +29,7 @@ import eu.matfx.tools.Command;
 
 
 /**
- * test application for an rgb sensor
+ * test application for the first sensor
  * @author m.goerlich
  *
  */
@@ -98,7 +98,7 @@ public class SingleMeasurementSensor extends Application {
 			}
         	
         });
-		
+        this.previousSensorValue();
 		
 		  ToggleButton test = new ToggleButton("Start");
 		  test.setOnAction(new EventHandler<ActionEvent>(){
@@ -110,7 +110,7 @@ public class SingleMeasurementSensor extends Application {
 					{
 						
 						startAnimation();
-						test.setText("Ende");
+						test.setText("End");
 					}
 					else
 					{
@@ -146,9 +146,7 @@ public class SingleMeasurementSensor extends Application {
 								
 								if(helperClass.getCurrentSensorToShow() > 2)
 									helperClass.setCurrentSensorToShow(0);
-								
-								//helperClass.setCurrentSensorToShow(1);
-								
+							
 								SensorValue sensorValue = helperClass.getSelectedSensorValue();
 								sensorPanel.getImageProperty().set(sensorValue.getImageBezeichnung());
 								sensorPanel.getValueProperty().set(sensorValue.getCurrentValue() + "" + sensorValue.getMeasurementUnit());
@@ -178,13 +176,7 @@ public class SingleMeasurementSensor extends Application {
         sensorPanel.setPrefWidth(120);
         sensorPanel.setPrefHeight(140);
         pane.setCenter(sensorPanel);
-        
-        
-        
-        
-        
-        
-        
+         
         
         VBox vBoxControl = new VBox(10);
         vBoxControl.setPadding(new Insets(5,5,5,5));
@@ -285,7 +277,7 @@ public class SingleMeasurementSensor extends Application {
             {
             	Color colorSelected = colorPickerBackground.getValue();
             	pane.setBackground(new Background(new BackgroundFill(colorSelected, CornerRadii.EMPTY, Insets.EMPTY)));
-            	
+            	vBoxControl.setBackground(new Background(new BackgroundFill(colorSelected, CornerRadii.EMPTY, Insets.EMPTY)));
              	
             }
         });
