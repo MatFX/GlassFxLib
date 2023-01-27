@@ -46,6 +46,7 @@ public class SingleValueImageComponent extends Region
 	
 	private Canvas imageCanvas;
 	
+	
 	//started dimension from the svg file
 	private double width_component = 90;
 	private double height_component = 100;
