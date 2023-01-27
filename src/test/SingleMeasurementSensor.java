@@ -1,6 +1,6 @@
 package test;
 
-import eu.matfx.component.sensor.GlassPaneSensor;
+import eu.matfx.component.sensor.SingleValueImageComponent;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -35,7 +35,7 @@ import eu.matfx.tools.Command;
  */
 public class SingleMeasurementSensor extends Application {
 	
-	private GlassPaneSensor sensorPanel = new GlassPaneSensor();
+	private SingleValueImageComponent sensorPanel = new SingleValueImageComponent();
 	
 	private Thread animThread;
 	

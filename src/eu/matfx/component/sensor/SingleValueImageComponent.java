@@ -27,11 +27,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 /**
- * simple sensor component with two buttons to change the view
+ * simple sensor component with two buttons to change the view; 
  * @author m.goerlich
  *
  */
-public class GlassPaneSensor extends Region
+public class SingleValueImageComponent extends Region
 {
 	public enum StopIndizes
 	{
@@ -77,7 +77,7 @@ public class GlassPaneSensor extends Region
 	//Orginal color Color.web("#5abaa0")
 	private SimpleObjectProperty<Color> baseColor = new SimpleObjectProperty<Color>();
 	
-	public GlassPaneSensor()
+	public SingleValueImageComponent()
 	{
 		this.initGraphics();
 		this.registerListener();
