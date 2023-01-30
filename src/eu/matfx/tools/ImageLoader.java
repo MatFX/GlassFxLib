@@ -17,9 +17,9 @@ public class ImageLoader
 	/**
 	 * Subfolders, starting from the project folder.
 	 */
-	public static final String ICONS = "/resources/icons";
+	public static String ICONS = "/resources/icons";
 	
-	public static final String SUFFIX_FILE = ".png";
+	public static String SUFFIX_FILE = ".png";
 	
 	public static InputStream getResourceStream(String pkname, String fname) throws FileNotFoundException
 	{
@@ -27,6 +27,7 @@ public class ImageLoader
 		File file = new File("");
 		
 		file = new File(file.getAbsoluteFile() + resname);
+		System.out.println("file " + file.getAbsolutePath());
 		InputStream inputStream = new FileInputStream(file.getAbsolutePath());
 	
 		return inputStream;
