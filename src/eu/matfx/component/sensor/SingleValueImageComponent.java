@@ -38,12 +38,19 @@ public class SingleValueImageComponent extends Region
 		BASE_BACKGROUND_LINEAR_GRADIENT;
 	}
 	
+	/**
+	 * Colors for the linear gradient
+	 */
 	private HashMap<StopIndizes, Stop[]> stopMap = new HashMap<StopIndizes, Stop[]>();
 	
 	private Rectangle base_background_component;
-	
+	/**
+	 * Main content to visualize the value from the sensor e.g. 
+	 */
 	private Canvas textCanvas;
-	
+	/**
+	 * Optional. Display of an image as additional visualization for the sensor value.
+	 */
 	private Canvas imageCanvas;
 	
 	
@@ -54,14 +61,23 @@ public class SingleValueImageComponent extends Region
 	protected ButtonRectangle button_down, button_up;
 	
 	/**
-	 * Wert der später in der Anzeige erscheint
+	 * ValueProperty as String. To Change the visulisation of the component set here the value.
 	 */
 	private SimpleStringProperty valueProperty = new SimpleStringProperty();
 	
+	/**
+	 * Property to change the image at the component.
+	 */
 	private SimpleStringProperty imageFileNameProperty = new SimpleStringProperty();
 	
+	/**
+	 * Connect from outside when a response to the buttons is required.
+	 */
 	private SimpleObjectProperty<Command> commandProperty = new SimpleObjectProperty<Command>();
 	
+	/**
+	 * Changeable blur effect of the border.
+	 */
 	private SimpleIntegerProperty blurRadiusProperty = new SimpleIntegerProperty();
 	
 	private int MIN_BLUR_RADIUS = 0;
@@ -72,10 +88,16 @@ public class SingleValueImageComponent extends Region
 	
 	private int MAX_GRADIENT_ALPHA_CHANNEL = 0x80;
 	
+	/**
+	 * Changeable the alpha channel from the linear gradient of the background.
+	 */
 	private SimpleIntegerProperty alphaChannelProperty  = new SimpleIntegerProperty();
 	
 	
 	//Orginal color Color.web("#5abaa0")
+	/**
+	 * Changeable color of the component.
+	 */
 	private SimpleObjectProperty<Color> baseColor = new SimpleObjectProperty<Color>();
 	
 	public SingleValueImageComponent()
@@ -83,11 +105,8 @@ public class SingleValueImageComponent extends Region
 		this.initGraphics();
 		this.registerListener();
 	}
-	
 
 
-	
-	
 	private void initGraphics() 
 	{	
 		//init the color

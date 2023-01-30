@@ -27,20 +27,21 @@ public class ImageLoader
 		File file = new File("");
 		
 		file = new File(file.getAbsoluteFile() + resname);
-		System.out.println("file " + file.getAbsolutePath());
 		InputStream inputStream = new FileInputStream(file.getAbsolutePath());
-	
 		return inputStream;
-	
-	
 	}
 	
+	/**
+	 * pure image from the folder
+	 * @param fileName
+	 * @return
+	 */
 	public static Image getImageFromIconFolder(String fileName)
 	{
 		Image image = null;
+	
+		fileName = checkSuffixFromImageFilename(fileName);
 		
-		if(!fileName.contains(ImageLoader.SUFFIX_FILE))
-			fileName = fileName + ImageLoader.SUFFIX_FILE;
 		try
 		{
 			InputStream ins = ImageLoader.getResourceStream(ICONS, fileName);
@@ -54,12 +55,21 @@ public class ImageLoader
 		return image;
 	}
 
+	/**
+	 * manipulated image from the folder
+	 * @param fileName
+	 * @param newW
+	 * @param newH
+	 * @param preservationRatio
+	 * @param smooth
+	 * @return
+	 */
 	public static Image getImageFromIconFolder(String fileName, double newW, double newH, boolean preservationRatio, boolean smooth)
 	{
 		Image image = null;
 		
-		if(!fileName.contains(ImageLoader.SUFFIX_FILE))
-			fileName = fileName + ImageLoader.SUFFIX_FILE;
+		fileName = checkSuffixFromImageFilename(fileName);
+		
 		try
 		{
 			InputStream ins = ImageLoader.getResourceStream(ICONS, fileName);
@@ -71,6 +81,16 @@ public class ImageLoader
 			return getImageFromIconFolder("spacer.png");
 		}
 		return image;
+	}
+	
+	
+	
+	protected static String checkSuffixFromImageFilename(String fileName)
+	{
+		if(!fileName.contains(ImageLoader.SUFFIX_FILE))
+			fileName = fileName + ImageLoader.SUFFIX_FILE;
+		
+		return fileName;
 	}
 
 

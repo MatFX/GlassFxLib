@@ -17,9 +17,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+/**
+ * Some methods that are needed again and again for the visualization.
+ * @author m.goerlich
+ *
+ */
 public class UIToolBox 
 {
 
+	/**
+	 * produce a gap in a horizontal layout
+	 * @return
+	 */
 	public static Node createHorizontalSpacer() 
 	{
 		Region spacer = new Region();
@@ -27,6 +36,10 @@ public class UIToolBox
 		return spacer;
 	}
 	
+	/**
+	 * produce a gap in a vertical layout
+	 * @return
+	 */
 	public static Node createVerticalSpacer()
 	{
 		Region spacer = new Region();
@@ -37,6 +50,7 @@ public class UIToolBox
 	public static Bounds textWidth(double size, String valueToShow, Font fontBase)
 	{
 		//hier muss die bounds aufgebaut werden anhand der zwei darzustellenden Werte 
+		//TODO variable font
 		if(fontBase == null)
 		{
 			fontBase = Font.font("Verdana", FontWeight.BOLD, 12);
@@ -139,6 +153,12 @@ public class UIToolBox
 		return imageView.snapshot(null, null);
 	}
 	
+	/**
+	 * to colorize a image 
+	 * @param imageToRecolor
+	 * @param newColor
+	 * @return
+	 */
 	public static Image getColorizedImage(Image imageToRecolor, Color newColor) 
 	{
 		
@@ -159,12 +179,19 @@ public class UIToolBox
 				pixelWriter.setColor(x, y, blendedColor);
 			}
 		}
-		
 		return writableImage;
 		
 		
 	}
 
+	/**
+	 * format the color to a web string.
+	 * @param red
+	 * @param green
+	 * @param blue
+	 * @param alpha
+	 * @return
+	 */
 	public static String getWebColorString(double red, double green, double blue, double alpha) 
 	{
 		StringBuilder sb = new StringBuilder("#");
@@ -174,7 +201,6 @@ public class UIToolBox
 		String alphaValue = String.format("%02X", (int)( alpha * 255 ));
 		
 		sb.append(redValue).append(greenValue).append(blueValue).append(alphaValue);
-		System.out.println(" sb " + sb.toString());
 		return sb.toString();
 	}
 }

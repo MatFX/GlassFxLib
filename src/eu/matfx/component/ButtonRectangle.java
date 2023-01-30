@@ -10,6 +10,11 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * tiny button, on top or bottom of the sensor component.
+ * @author m.goerlich
+ *
+ */
 public class ButtonRectangle extends Rectangle
 {
 	
@@ -21,7 +26,6 @@ public class ButtonRectangle extends Rectangle
 	
 	private PositionGradient positionGradient;
 	
-	//Werte die auf Basis der ursprünglichen Breite und Höhe des ausgehenden Objekts ermittelt wurden.
 	private double percentValue_X, percenValue_Y, percentValue_Width, percentValue_Height,arcWidthAndHeight;
 	
 	private Color baseColor = Color.web("#5abaa0");
@@ -41,6 +45,15 @@ public class ButtonRectangle extends Rectangle
 		RESET_COMMAND;
 	}
 	
+	/**
+	 * 
+	 * @param positionGradient
+	 * @param percentValue_X
+	 * @param percenValue_Y
+	 * @param percentValue_Width
+	 * @param percentValue_Height
+	 * @param arcWidthAndHeight
+	 */
 	public ButtonRectangle(PositionGradient positionGradient, double percentValue_X, double percenValue_Y, double percentValue_Width, double percentValue_Height, double arcWidthAndHeight)
 	{
 		this.positionGradient = positionGradient;
@@ -55,6 +68,9 @@ public class ButtonRectangle extends Rectangle
 		this.setOnMouseReleased(e -> setNodeMouseEvent(Command.BUTTON_RELEASED, e));
 	}
 
+	/**
+	 * change the color after received a new mouse event.
+	 */
 	private void setNodeMouseEvent(Command commandValue, MouseEvent e) 
 	{
 		if(commandValue == Command.BUTTON_PRESSED)
@@ -90,6 +106,11 @@ public class ButtonRectangle extends Rectangle
 		return commandProperty;
 	}
 
+	/**
+	 * Calculates the new dimension of the button from the given width and height.
+	 * @param width_component
+	 * @param height_component
+	 */
 	public void refreshSize(double width_component, double height_component) 
 	{
 		this.setX(width_component * percentValue_X);
@@ -102,7 +123,7 @@ public class ButtonRectangle extends Rectangle
 	}
 
 	/**
-	 * BasisFarbe und Ermittlung der Stop Values
+	 * set base color to fill the button. It will be used for the linear gradient or the solid color.
 	 * @param newValue
 	 */
 	public void setBaseColor(Color newValue) 
