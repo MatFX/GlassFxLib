@@ -1,10 +1,10 @@
 package test;
 
 import eu.matfx.component.sensor.SingleValueImageComponent;
+import eu.matfx.tools.Command;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,7 +25,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import test.stuff.HelperClass;
 import test.stuff.SensorValue;
-import eu.matfx.tools.Command;
 
 
 /**
@@ -65,7 +64,7 @@ public class SingleMeasurementSensor extends Application {
 			@Override
 			public void changed(ObservableValue<? extends Command> observable, Command oldValue, Command newValue) {
 				
-				System.out.println("newValue " + newValue);
+				System.out.println("newValue test " + newValue);
 				switch(newValue)
 				{
 					case NEXT_SENSOR_VALUE:
