@@ -53,10 +53,6 @@ public class SingleMeasurementSensor extends Application {
     public void start(Stage stage) 
     {
 		BorderPane pane = new BorderPane();
-		
-	
-		
-		
 		  
         sensorPanel.getCommandProperty().addListener(new ChangeListener<Command>()
         {
