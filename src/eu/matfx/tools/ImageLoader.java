@@ -14,7 +14,9 @@ import javafx.scene.image.Image;
  */
 public class ImageLoader 
 {
-	
+	/**
+	 * Subfolders, starting from the project folder.
+	 */
 	public static final String ICONS = "/resources/icons";
 	
 	public static final String SUFFIX_FILE = ".png";
