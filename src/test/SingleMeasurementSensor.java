@@ -1,5 +1,7 @@
 package test;
 
+import java.util.Random;
+
 import eu.matfx.component.sensor.SingleValueImageComponent;
 import eu.matfx.tools.Command;
 import javafx.application.Application;
@@ -298,6 +300,11 @@ public class SingleMeasurementSensor extends Application {
 				helperClass.setCurrentSensorToShow(helperClass.getMapSize()-1);
 			
 			SensorValue sensorValue = helperClass.getSelectedSensorValue(); 
+			
+			Random random = new Random();
+			double newCurrentValue = random.nextDouble()*(sensorValue.getBis()-sensorValue.getVon());
+			double roundedValue = Math.round(newCurrentValue*100)/100;
+			sensorValue.setCurrentValue(roundedValue);
 			sensorPanel.getImageProperty().set(sensorValue.getImageBezeichnung());
 			sensorPanel.getValueProperty().set(sensorValue.getCurrentValue() + "" + sensorValue.getMeasurementUnit());
 			
@@ -311,6 +318,11 @@ public class SingleMeasurementSensor extends Application {
 				helperClass.setCurrentSensorToShow(0);
 			
 			SensorValue sensorValue = helperClass.getSelectedSensorValue(); 
+			
+			Random random = new Random();
+			double newCurrentValue = random.nextDouble()*(sensorValue.getBis()-sensorValue.getVon());
+			double roundedValue = Math.round(newCurrentValue*100)/100;
+			sensorValue.setCurrentValue(roundedValue);
 			sensorPanel.getImageProperty().set(sensorValue.getImageBezeichnung());
 			sensorPanel.getValueProperty().set(sensorValue.getCurrentValue() + "" + sensorValue.getMeasurementUnit());
 			
