@@ -14,12 +14,12 @@ import javafx.scene.image.Image;
  */
 public class ImageLoader 
 {
+	public static String SUFFIX_FILE = ".png";
+	
 	/**
 	 * Subfolders, starting from the project folder.
 	 */
-	public static String ICONS = "/resources/icons";
-	
-	public static String SUFFIX_FILE = ".png";
+	public static String ICONS = "/resources/icon";
 	
 	public static InputStream getResourceStream(String pkname, String fname) throws FileNotFoundException
 	{
@@ -50,7 +50,8 @@ public class ImageLoader
 		}
 		catch(Exception e)
 		{
-			return getImageFromIconFolder("spacer.png");
+			//TODO logger
+			return getDefaultImageFromIconFolder();
 		}
 		return image;
 	}
@@ -78,13 +79,20 @@ public class ImageLoader
 		}
 		catch(Exception e)
 		{
-			return getImageFromIconFolder("spacer.png");
+			//TODO logger
+			return getDefaultImageFromIconFolder();
 		}
 		return image;
 	}
 	
 	
 	
+	private static Image getDefaultImageFromIconFolder() 
+	{
+		Image image = new Image("/eu/matfx/tools/spacer.png", 1, 1, false, false);
+		return image;
+	}
+
 	protected static String checkSuffixFromImageFilename(String fileName)
 	{
 		if(!fileName.contains(ImageLoader.SUFFIX_FILE))

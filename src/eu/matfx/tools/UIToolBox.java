@@ -164,6 +164,7 @@ public class UIToolBox
 		
 		int maxX = (int) imageToRecolor.getWidth();
 		int maxY = (int) imageToRecolor.getHeight();
+		System.out.println("maxX " + maxX  +" maxY " + maxY);
 		
 		PixelReader pixelReader =   imageToRecolor.getPixelReader();
 		
