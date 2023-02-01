@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 /**
  * Load images from the definied resource folder
  * @author m.goerlich
- *
+ * TODO abstract class and override the getImage methods in the application
  */
 public class ImageLoader 
 {
