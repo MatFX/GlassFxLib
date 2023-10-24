@@ -94,8 +94,7 @@ public class MoreValueComponent extends AValueComponent
 		});
 	
 		this.getChildren().addAll(base_background_component, topCanvas, textCanvas, bottomCanvas, button_down, button_up);
-		
-		//TODO valuePropertys
+	
 	}
 
 	protected void registerListener() 
@@ -226,11 +225,6 @@ public class MoreValueComponent extends AValueComponent
 	{
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		gc.clearRect(0, 0, previous_w, previous_h);
-		
-		//TODO raus nur für test 
-		//gc.setFill(Color.ALICEBLUE);
-		//gc.fillRect(0, 0, textCanvas.getWidth(), textCanvas.getHeight());
-		
 		
 		Font fontLcd = Font.font("Verdana", 10);
 		

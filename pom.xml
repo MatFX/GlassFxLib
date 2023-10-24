@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>eu.matfx</groupId>
   <artifactId>glassfxlib</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
   <name>GlassFXLib</name>
   <description>GlassFXLib is a JavaFX library to visulize states from sensor or actuator</description>
   <url>https://github.com/MatFX/GlassFxLib/wiki</url>
@@ -114,6 +114,7 @@
 	      	</configuration>
 	      </plugin>
 	      
+	      <!-- 
 	      <plugin>
 		      <groupId>org.sonatype.plugins</groupId>
 		      <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -125,7 +126,7 @@
 		        <autoReleaseAfterClose>true</autoReleaseAfterClose>
 		      </configuration>
    		 </plugin>
-	 
+	  -->
 	      
      	</plugins>
   	</build>
@@ -135,10 +136,12 @@
      		<name>GlassFxLib</name>
      		<url>https://maven.pkg.github.com/MatFX/GlassFxLib</url>
    		</repository>
+   		<!-- 
    		<snapshotRepository>
    			<id>ossrh</id>
    			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
    		</snapshotRepository>
+   		 -->
 	</distributionManagement>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
