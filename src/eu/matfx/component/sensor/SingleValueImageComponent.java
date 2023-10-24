@@ -1,28 +1,20 @@
 package eu.matfx.component.sensor;
 
-import java.util.HashMap;
-
 import eu.matfx.component.ButtonRectangle;
 import eu.matfx.component.ButtonRectangle.PositionGradient;
 import eu.matfx.tools.Command;
 import eu.matfx.tools.ImageLoader;
 import eu.matfx.tools.UIToolBox;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -31,19 +23,13 @@ import javafx.scene.text.Text;
  * @author m.goerlich
  *
  */
-public class SingleValueImageComponent extends Region
+public class SingleValueImageComponent extends AValueComponent
 {
-	public enum StopIndizes
-	{
-		BASE_BACKGROUND_LINEAR_GRADIENT;
-	}
 	
-	/**
-	 * Colors for the linear gradient
-	 */
-	private HashMap<StopIndizes, Stop[]> stopMap = new HashMap<StopIndizes, Stop[]>();
 	
-	private Rectangle base_background_component;
+	//started dimension from the svg file
+	private double width_component = 90;
+	private double height_component = 100;
 	/**
 	 * Main content to visualize the value from the sensor e.g. 
 	 */
@@ -52,13 +38,6 @@ public class SingleValueImageComponent extends Region
 	 * Optional. Display of an image as additional visualization for the sensor value.
 	 */
 	private Canvas imageCanvas;
-	
-	
-	//started dimension from the svg file
-	private double width_component = 90;
-	private double height_component = 100;
-	
-	protected ButtonRectangle button_down, button_up;
 	
 	/**
 	 * ValueProperty as String. To Change the visulisation of the component set here the value.
@@ -70,122 +49,18 @@ public class SingleValueImageComponent extends Region
 	 */
 	private SimpleStringProperty imageFileNameProperty = new SimpleStringProperty();
 	
-	/**
-	 * Connect from outside when a response to the buttons is required.
-	 */
-	private SimpleObjectProperty<Command> commandProperty = new SimpleObjectProperty<Command>();
-	
-	/**
-	 * Changeable blur effect of the border.
-	 */
-	private SimpleIntegerProperty blurRadiusProperty = new SimpleIntegerProperty();
-	
-	private int MIN_BLUR_RADIUS = 0;
-	
-	private int MAX_BLUR_RADIUS = 10;
-	
-	private int MIN_GRADIENT_ALPHA_CHANNEL = 0;
-	
-	private int MAX_GRADIENT_ALPHA_CHANNEL = 0x80;
-	
-	/**
-	 * Changeable the alpha channel from the linear gradient of the background.
-	 */
-	private SimpleIntegerProperty alphaChannelProperty  = new SimpleIntegerProperty();
-	
-	
-	//Orginal color Color.web("#5abaa0")
-	/**
-	 * Changeable color of the component.
-	 */
-	private SimpleObjectProperty<Color> baseColor = new SimpleObjectProperty<Color>();
+	private ButtonRectangle button_up, button_down;
 	
 	public SingleValueImageComponent()
 	{
+		super();
 		this.initGraphics();
 		this.registerListener();
 	}
 
 
-	private void initGraphics() 
+	protected void initGraphics() 
 	{	
-		//init the color
-		baseColor.set(Color.web("#5abaa0"));
-		baseColor.addListener(new ChangeListener<Color>(){
-
-			@Override
-			public void changed(ObservableValue<? extends Color> observable, Color oldValue, Color newValue) {
-				reColoredComponent();
-			}
-			
-		});
-		
-		//stops for the gradient overlay 
-		Stop[] stopArray = new Stop[]{
-				new Stop(0, Color.web("#ffffff00")),
-				new Stop(1, Color.web("#ffffff33"))
-			};
-		stopMap.put(StopIndizes.BASE_BACKGROUND_LINEAR_GRADIENT, stopArray);
-		alphaChannelProperty.addListener(new ChangeListener<Number>(){
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				if(newValue != null)
-				{
-					
-					double alphaValueAsDouble = 0;
-					if(newValue.intValue() > 0)
-						alphaValueAsDouble = newValue.intValue() / 255D;
-					
-					Stop endStop = stopMap.get(StopIndizes.BASE_BACKGROUND_LINEAR_GRADIENT)[1];
-					Color colorValue = endStop.getColor();
-					String webColorString = UIToolBox.getWebColorString(colorValue.getRed(), colorValue.getGreen(), colorValue.getBlue(), alphaValueAsDouble);
-				
-					stopMap.get(StopIndizes.BASE_BACKGROUND_LINEAR_GRADIENT)[1] = new Stop(1, Color.web(webColorString));
-					
-					//ignore if the init call
-					if(base_background_component != null)
-						resize();
-					
-				
-				}
-				
-			}
-			
-		});
-		//init the alphachannel
-		alphaChannelProperty.set(0x33);
-		
-		
-		base_background_component = new Rectangle();
-		base_background_component.setStroke(baseColor.get());
-		
-		//property to react when the blur is changed
-		blurRadiusProperty.addListener(new ChangeListener<Number>(){
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) 
-			{
-				if(newValue != null)
-				{
-					if(newValue.intValue() < MIN_BLUR_RADIUS)
-						newValue = new Integer(MIN_BLUR_RADIUS);
-					else if(newValue.intValue()  > MAX_BLUR_RADIUS)
-						newValue = new Integer(MAX_BLUR_RADIUS);
-					
-					
-					GaussianBlur g = new GaussianBlur();  
-			        g.setRadius(newValue.intValue());  
-			        base_background_component.setEffect(g);
-				}
-			
-				
-			}
-    		
-    	});
-    	//initial blur
-		blurRadiusProperty.set(4);
-        
 		
 		textCanvas = new Canvas();
 		imageCanvas = new Canvas();
@@ -198,8 +73,8 @@ public class SingleValueImageComponent extends Region
 			public void changed(ObservableValue<? extends ButtonRectangle.Command> observable, ButtonRectangle.Command oldValue, ButtonRectangle.Command newValue) {
 				if(newValue == ButtonRectangle.Command.BUTTON_RELEASED)
 				{
-					commandProperty.set(Command.RESET_COMMAND);
-					commandProperty.set(Command.NEXT_SENSOR_VALUE);
+					getCommandProperty().set(Command.RESET_COMMAND);
+					getCommandProperty().set(Command.NEXT_SENSOR_VALUE);
 				}
 			}
 			
@@ -215,8 +90,8 @@ public class SingleValueImageComponent extends Region
 			public void changed(ObservableValue<? extends ButtonRectangle.Command> observable, ButtonRectangle.Command oldValue, ButtonRectangle.Command newValue) {
 				if(newValue == ButtonRectangle.Command.BUTTON_RELEASED)
 				{
-					commandProperty.set(Command.RESET_COMMAND);
-					commandProperty.set(Command.PREVIOUS_SENSOR_VALUE);
+					getCommandProperty().set(Command.RESET_COMMAND);
+					getCommandProperty().set(Command.PREVIOUS_SENSOR_VALUE);
 					
 				}
 				
@@ -240,13 +115,13 @@ public class SingleValueImageComponent extends Region
 	
 	}
 	
-	private void registerListener() 
+	protected void registerListener() 
 	{
 		widthProperty().addListener(observable -> resize());
 		heightProperty().addListener(observable -> resize());
 	}
 
-	private void resize() {
+	protected void resize() {
 		width_component = getWidth();
 		height_component = getHeight();
 		
@@ -372,6 +247,8 @@ public class SingleValueImageComponent extends Region
 		
 		gc.drawImage(coloredImage, newXLocation, newYLocation);
 		
+		
+		
 	}
 
 	/**
@@ -427,49 +304,6 @@ public class SingleValueImageComponent extends Region
 		return imageFileNameProperty;
 	}
 
-	/**
-	 * for listing the commands
-	 * @return
-	 */
-	public SimpleObjectProperty<Command> getCommandProperty() 
-	{
-		return this.commandProperty;
-	}
-
-	/**
-	 * Property to change the blur of the frame from outside the component
-	 * @return
-	 */
-	public SimpleIntegerProperty getBlurRadiusProperty()
-	{
-		return blurRadiusProperty;
-	}
-
-	public int getMinBlurRadiusValue() {
-		return MIN_BLUR_RADIUS;
-	}
-
-	public int getMaxBlurRadiusValue() {
-		return MAX_BLUR_RADIUS;
-	}
-
-	public double getMinGradientAlphaChannel() {
-		return MIN_GRADIENT_ALPHA_CHANNEL;
-	}
-
-	public double getMaxGradientAlphaChannel() {
-		return MAX_GRADIENT_ALPHA_CHANNEL;
-	}
-	
-	/**
-	 *  Property to change the alpha channel of the base backround (stop values from the linear gradient)
-	 * @return
-	 */
-	public SimpleIntegerProperty getAlphaChannelProperty()
-	{
-		return alphaChannelProperty;
-	}
-
 	public Color getBaseColor() 
 	{
 		return baseColor.get();
@@ -480,7 +314,7 @@ public class SingleValueImageComponent extends Region
 		this.baseColor.set(colorSelected);
 	}
 
-	private void reColoredComponent() {
+	protected void reColoredComponent() {
 		base_background_component.setStroke(baseColor.get());
 		button_down.setBaseColor(baseColor.get());
 		button_up.setBaseColor(baseColor.get());

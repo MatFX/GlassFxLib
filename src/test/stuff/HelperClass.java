@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javafx.scene.paint.Color;
+
 
 
 /**
@@ -18,29 +20,32 @@ public class HelperClass
 	
 	
 	
-	private static HashMap<Integer, List<SensorValue>> sensorMap = new HashMap<Integer, List<SensorValue>>();
+	private HashMap<Integer, List<SensorValue>> sensorMap = new HashMap<Integer, List<SensorValue>>();
 
-	public int currentSensorToShow = 0;
+	private int currentSensorToShow = 0;
 
 	private List<SensorValue> sensorList;
 	
 	public HelperClass()
 	{
 		sensorList = new ArrayList<SensorValue>();
-		sensorList.add(new SensorValue(25, -40, 60, "°C", "hi_temp", "Temperatur:"));
-		//sensorList.add(new SensorValue(22.5, 8, 40, "°C", "", new double[]{21.5, 24.5, 30}));
+		
+		SensorValue tempValue = new SensorValue(23.5, -40, 60, "°C", "hi_temp", "Temperatur:");
+		tempValue.setPreferedColor(Color.BLUE);
+		sensorList.add(tempValue);
 		sensorMap.put(TEMPERATURE, sensorList);
 		
 		sensorList = new ArrayList<SensorValue>();
-		sensorList.add(new SensorValue(25.4, 0, 100, "%", "", "Feuchtigkeit:"));
+		sensorList.add(new SensorValue(64.0, 0, 100, "%", "", "Feuchtigkeit:"));
 		sensorMap.put(HUMIDITY, sensorList);
 		
 		sensorList = new ArrayList<SensorValue>();
-		sensorList.add(new SensorValue(2500, 0, 100000, "Lux", "hi_brightness", "Helligkeit:"));
+		sensorList.add(new SensorValue(7500, 0, 100000, "Lux", "hi_brightness", "Helligkeit:"));
 		sensorMap.put(BRIGHTNESS, sensorList);
 		
-		
 	}
+	
+	
 
 	public int getCurrentSensorToShow() {
 		return currentSensorToShow;
@@ -53,7 +58,6 @@ public class HelperClass
 
 	public void setCurrentSensorToShow(int val) {
 		currentSensorToShow = val;
-		
 	}
 
 	public int getMapSize() 
@@ -61,6 +65,25 @@ public class HelperClass
 		return sensorMap.size();
 	}
 
+	public SensorValue getBottomValue()
+	{
+		int bottomIndex = currentSensorToShow + 1;
+		if(bottomIndex > 2)
+			bottomIndex = 0;
+		
+		return sensorMap.get(bottomIndex).get(0);
+	}
+	
+	public SensorValue getTopValue()
+	{
+		int topIndex = currentSensorToShow - 1;
+		if(topIndex < 0)
+			topIndex = 2;
+		
+		return sensorMap.get(topIndex).get(0);
+	}
+	
+	
 	public SensorValue getSelectedSensorValue() 
 	{
 		return sensorMap.get(currentSensorToShow).get(0);
@@ -71,8 +94,4 @@ public class HelperClass
 		
 	}
 	
-	
-	
-	
-
 }

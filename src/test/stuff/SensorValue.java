@@ -1,6 +1,7 @@
 package test.stuff;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.paint.Color;
 
 /**
  * helper class to store and change values
@@ -30,6 +31,11 @@ public class SensorValue
 	private double[] presetValues = null;
 	
 	private String description;
+	
+	/**
+	 * 
+	 */
+	private Color preferedColor= null;
 	
 	public SensorValue(double currentValue, double von, double bis, String measurementUnit, String imageName, double[] presetValues)
 	{
@@ -132,4 +138,15 @@ public class SensorValue
 	{
 		return description;
 	}
+	
+	public Color preferedColor()
+	{
+		return preferedColor;
+	}
+
+	public void setPreferedColor(Color color) {
+		this.preferedColor = color;
+	}
+
+
 }
