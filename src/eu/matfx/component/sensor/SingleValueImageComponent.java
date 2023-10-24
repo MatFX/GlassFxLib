@@ -49,7 +49,7 @@ public class SingleValueImageComponent extends AValueComponent
 	 */
 	private SimpleStringProperty imageFileNameProperty = new SimpleStringProperty();
 	
-	private ButtonRectangle button_up, button_down;
+	protected ButtonRectangle button_up, button_down;
 	
 	public SingleValueImageComponent()
 	{
