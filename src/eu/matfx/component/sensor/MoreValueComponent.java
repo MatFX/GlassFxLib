@@ -27,7 +27,7 @@ public class MoreValueComponent extends AValueComponent
 
 	private Canvas topCanvas, bottomCanvas, textCanvas;
 	
-	private ButtonRectangle button_up, button_down;
+	protected ButtonRectangle button_up, button_down;
 	/**
 	 * ValueProperty as String. To Change the visulisation of the text canvas set here the value.
 	 */

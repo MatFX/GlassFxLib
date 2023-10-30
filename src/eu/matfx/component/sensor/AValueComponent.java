@@ -161,11 +161,11 @@ public abstract class AValueComponent extends Region
 		return MAX_BLUR_RADIUS;
 	}
 
-	public double getMinGradientAlphaChannel() {
+	public int getMinGradientAlphaChannel() {
 		return MIN_GRADIENT_ALPHA_CHANNEL;
 	}
 
-	public double getMaxGradientAlphaChannel() {
+	public int getMaxGradientAlphaChannel() {
 		return MAX_GRADIENT_ALPHA_CHANNEL;
 	}
 	
