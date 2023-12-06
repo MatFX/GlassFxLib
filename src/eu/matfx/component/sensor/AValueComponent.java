@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import eu.matfx.tools.Command;
 import eu.matfx.tools.UIToolBox;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -16,13 +17,15 @@ import javafx.scene.shape.Rectangle;
 
 public abstract class AValueComponent extends Region
 {
-	
-
-	//Orginal color Color.web("#5abaa0")
 	/**
 	 * Changeable color of the component.
 	 */
 	protected SimpleObjectProperty<Color> baseColor = new SimpleObjectProperty<Color>();
+	
+	/**
+	 * Simple boolean Property to select the transparence at the border
+	 */
+	protected SimpleBooleanProperty useTransparenceStrokeColor = new SimpleBooleanProperty(false);
 	
 	protected Rectangle base_background_component;
 	
@@ -77,6 +80,16 @@ public abstract class AValueComponent extends Region
 			
 		});
 		
+		useTransparenceStrokeColor.addListener(new ChangeListener<Boolean>(){
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
+				reColoredComponent();
+				
+			}
+			
+		});
+	
 
 		//stops for the gradient overlay 
 		Stop[] stopArray = new Stop[]{
@@ -115,7 +128,13 @@ public abstract class AValueComponent extends Region
 		alphaChannelProperty.set(0x33);
 		
 		base_background_component = new Rectangle();
-		base_background_component.setStroke(baseColor.get());
+		if(useTransparenceStrokeColor.get())
+		{
+			base_background_component.setStroke(Color.web("#00000000"));
+		}
+		else
+			base_background_component.setStroke(baseColor.get());
+		
 		
 		//property to react when the blur is changed
 		blurRadiusProperty.addListener(new ChangeListener<Number>(){
@@ -211,9 +230,9 @@ public abstract class AValueComponent extends Region
 		return this.commandProperty;
 	}
 	
-
-
-
-
+	public SimpleBooleanProperty getTransparenceCheckBoxProperty()
+	{
+		return this.useTransparenceStrokeColor;
+	}
 
 }

@@ -7,12 +7,12 @@ import eu.matfx.tools.Command;
 import eu.matfx.tools.UIToolBox;
 import eu.matfx.tools.Value_Color_Component;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.text.Font;
@@ -137,7 +137,14 @@ public class MoreValueComponent extends AValueComponent
 	}
 	
 	protected void reColoredComponent() {
-		base_background_component.setStroke(baseColor.get());
+		
+		if(getTransparenceCheckBoxProperty().get())
+		{
+			base_background_component.setStroke(Color.web("#00000000"));
+		}
+		else
+			base_background_component.setStroke(baseColor.get());
+		
 		button_down.setBaseColor(baseColor.get());
 		button_up.setBaseColor(baseColor.get());
 		this.resize();
@@ -271,5 +278,7 @@ public class MoreValueComponent extends AValueComponent
 	public SimpleObjectProperty<Value_Color_Component> getBottomValueProperty(){
 		return valueBottomProperty;
 	}
+
+
 
 }

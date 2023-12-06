@@ -1,7 +1,6 @@
 package test;
 
 import eu.matfx.component.sensor.MoreValueComponent;
-import eu.matfx.component.sensor.SingleValueImageComponent;
 import eu.matfx.tools.Command;
 import eu.matfx.tools.Value_Color_Component;
 import javafx.application.Application;
@@ -11,15 +10,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -116,7 +116,39 @@ public class MultipleMeasurementSensor extends Application
         scrollRight.setContent(vBoxControl); 
         pane.setRight(scrollRight);
         
-   
+        
+//        Label labelTransparenceBorder = new Label("Transparence border: ");
+//        labelTransparenceBorder.setTextFill(Color.web("#FFFFFF80"));
+        
+        HBox checkHBox = new HBox(5);
+      // checkHBox.setPadding(new Insets(5,5,5,5));
+        
+        Label checkLabel = new Label("Transparence border:");
+        checkLabel.setTextFill(Color.web("#FFFFFF80"));
+        
+        CheckBox transparenceCheckBox = new CheckBox();
+        transparenceCheckBox.setOnAction(new EventHandler<ActionEvent>()
+        {
+
+			@Override
+			public void handle(ActionEvent arg0) 
+			{
+				if(transparenceCheckBox.isSelected())
+				{
+					sensorPanel.getTransparenceCheckBoxProperty().set(true);
+				}
+				else
+				{
+					sensorPanel.getTransparenceCheckBoxProperty().set(false);
+				}
+			}
+        	
+        });
+        checkHBox.getChildren().addAll(checkLabel, transparenceCheckBox);
+        
+        
+        
+        vBoxControl.getChildren().addAll(checkHBox);
         
         Label label = new Label("Blur radius slider:");
         label.setTextFill(Color.web("#FFFFFF80"));
