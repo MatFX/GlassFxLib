@@ -125,7 +125,6 @@
 		        <autoReleaseAfterClose>true</autoReleaseAfterClose>
 		      </configuration>
    		 </plugin>
-	
 	      
      	</plugins>
   	</build>
@@ -135,12 +134,11 @@
      		<name>GlassFxLib</name>
      		<url>https://maven.pkg.github.com/MatFX/GlassFxLib</url>
    		</repository>
- 
+
    		<snapshotRepository>
    			<id>ossrh</id>
    			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
    		</snapshotRepository>
-   		
    	
 	</distributionManagement>
 	<properties>
