@@ -6,6 +6,7 @@ import eu.matfx.component.ButtonRectangle.PositionGradient;
 import eu.matfx.tools.Command;
 import eu.matfx.tools.UIToolBox;
 import eu.matfx.tools.Value_Color_Component;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -43,6 +44,9 @@ public class MoreValueComponent extends AValueComponent
 	 */
 	private SimpleObjectProperty<Value_Color_Component> valueBottomProperty = new SimpleObjectProperty<Value_Color_Component>();
 	
+	private SimpleBooleanProperty button_up_disable = new SimpleBooleanProperty();
+	
+	private SimpleBooleanProperty button_down_disable = new SimpleBooleanProperty();
 		
 	public MoreValueComponent()
 	{
@@ -73,6 +77,24 @@ public class MoreValueComponent extends AValueComponent
 			}
 			
 		});
+		button_down_disable.addListener(new ChangeListener<Boolean>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean newValue) {
+				if(newValue != null)
+				{
+					button_down.setDisable(newValue);
+					if(newValue.booleanValue())
+						button_down.setOpacity(0);
+					else
+						button_down.setOpacity(1);
+				
+				}
+				
+			}
+			
+		});
+		
 		
 		
 		
@@ -92,6 +114,27 @@ public class MoreValueComponent extends AValueComponent
 			}
 			
 		});
+		button_up_disable.addListener(new ChangeListener<Boolean>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
+			{
+				if(newValue != null)
+				{
+					button_up.setDisable(newValue);
+					if(newValue.booleanValue())
+						button_up.setOpacity(0);
+					else
+						button_up.setOpacity(1);
+				
+				}
+				
+				
+			}
+			
+		});
+		
+	
 	
 		this.getChildren().addAll(base_background_component, topCanvas, textCanvas, bottomCanvas, button_down, button_up);
 	
@@ -278,7 +321,13 @@ public class MoreValueComponent extends AValueComponent
 	public SimpleObjectProperty<Value_Color_Component> getBottomValueProperty(){
 		return valueBottomProperty;
 	}
+	
+	public SimpleBooleanProperty getButton_Up_DisableProperty(){
+		return button_up_disable;
+	}
 
-
+	public SimpleBooleanProperty getButton_Down_DisableProperty(){
+		return button_down_disable;
+	}
 
 }

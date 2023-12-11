@@ -120,6 +120,28 @@ public class MultipleMeasurementSensor extends Application
 //        Label labelTransparenceBorder = new Label("Transparence border: ");
 //        labelTransparenceBorder.setTextFill(Color.web("#FFFFFF80"));
         
+        HBox checkButtonBox = new HBox(5);
+        
+        
+        Label labelButtonDisable = new Label("Disable Buttons:");
+        labelButtonDisable.setTextFill(Color.web("#FFFFFF80"));
+        
+        CheckBox checkBoxDisableButton = new CheckBox();
+        checkBoxDisableButton.setSelected(false);
+        checkBoxDisableButton.setOnAction(new EventHandler<ActionEvent>() 
+        {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				
+				sensorPanel.getButton_Down_DisableProperty().set(checkBoxDisableButton.isSelected());
+				sensorPanel.getButton_Up_DisableProperty().set(checkBoxDisableButton.isSelected());
+			}
+        	
+        });
+        checkButtonBox.getChildren().addAll(labelButtonDisable, checkBoxDisableButton);
+        vBoxControl.getChildren().addAll(checkButtonBox);
+        
         HBox checkHBox = new HBox(5);
       // checkHBox.setPadding(new Insets(5,5,5,5));
         
@@ -172,6 +194,9 @@ public class MultipleMeasurementSensor extends Application
       
         
         vBoxControl.getChildren().addAll(label, slider);
+       
+        
+        
         
         Label labelTransparenz = new Label("Background transparence:");
         labelTransparenz.setTextFill(Color.web("#FFFFFF80"));
