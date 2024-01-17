@@ -2,16 +2,13 @@ package eu.matfx.tools;
 
 import javafx.scene.paint.Color;
 
-public class Value_Color_Component 
+public class Value_Color_Component extends AColor_Component
 {
 	
-	private String value;
-	
-	private Color color;
-	
+
 	public Value_Color_Component(String value)
 	{
-		this.value = value;
+		super(value);
 	}
 	
 	public String getValue()
@@ -19,16 +16,6 @@ public class Value_Color_Component
 		return value;
 	}
 	
-	public Color getColor()
-	{
-		return color;
-	}
-
-	public void setColor(Color color)
-	{
-		this.color = color;
-		
-	}
 	
 	
 
