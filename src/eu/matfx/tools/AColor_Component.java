@@ -25,5 +25,14 @@ public abstract class AColor_Component
 		this.color = color;
 		
 	}
+	
+	/**
+	 * return the string value eg path to image or formatted text value
+	 * @return
+	 */
+	public String getValue()
+	{
+		return value;
+	}
 
 }

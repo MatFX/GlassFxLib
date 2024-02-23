@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 /**
  * test data to visulize
  */
-public class HelperClass
+public class HelperClassTextValues
 {
 
 	public static final int TEMPERATURE = 0;
@@ -26,7 +26,7 @@ public class HelperClass
 
 	private List<SensorValue> sensorList;
 	
-	public HelperClass()
+	public HelperClassTextValues()
 	{
 		sensorList = new ArrayList<SensorValue>();
 		

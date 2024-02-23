@@ -25,7 +25,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import test.stuff.HelperClass;
+import test.stuff.HelperClassTextValues;
 import test.stuff.SensorValue;
 
 
@@ -44,7 +44,7 @@ public class SingleMeasurementSensor extends Application {
 	
 	private Thread autoThread;
 	
-	private HelperClass helperClass = new HelperClass();
+	private HelperClassTextValues helperClass = new HelperClassTextValues();
 	
 	
 	public static void main(String[] args) {

@@ -1,7 +1,10 @@
 package eu.matfx.tools;
 
-import javafx.scene.paint.Color;
-
+/**
+ * Component to show text on the glass pane
+ * @author m.goerlich
+ *
+ */
 public class Value_Color_Component extends AColor_Component
 {
 	
@@ -10,11 +13,7 @@ public class Value_Color_Component extends AColor_Component
 	{
 		super(value);
 	}
-	
-	public String getValue()
-	{
-		return value;
-	}
+
 	
 	
 	

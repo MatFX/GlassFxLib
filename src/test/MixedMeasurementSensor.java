@@ -1,7 +1,8 @@
 package test;
 
-import eu.matfx.component.sensor.MoreValueComponent;
+import eu.matfx.component.sensor.MixedValueComponent;
 import eu.matfx.tools.Command;
+import eu.matfx.tools.Image_Color_Component;
 import eu.matfx.tools.Value_Color_Component;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -23,16 +24,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import test.stuff.HelperClassTextValues;
+import test.stuff.HelperClassMixedValues;
 
-public class MultipleMeasurementSensor extends Application
+public class MixedMeasurementSensor extends Application
 {
-	private HelperClassTextValues helperClass = new HelperClassTextValues();
+	private HelperClassMixedValues helperClass = new HelperClassMixedValues();
 	
 	/**
 	 * more values on the view
 	 */
-	private MoreValueComponent sensorPanel = new MoreValueComponent();
+	private MixedValueComponent sensorPanel = new MixedValueComponent();
 	
 	public static void main(String[] args) {
         Application.launch(args);
@@ -268,17 +269,35 @@ public class MultipleMeasurementSensor extends Application
 	}
 
 	private void drawTheValues() {
-		sensorPanel.getValueProperty().set(new Value_Color_Component(""));
-		sensorPanel.getTopValueProperty().set(new Value_Color_Component(""));
-		sensorPanel.getBottomValueProperty().set(new Value_Color_Component(""));
 		
+		
+		//TODO draw the values muss auf den Index achten
+		//muss geändert werden, weil nun die Color_Component als objekt unterschiedlich sein können
+		
+		
+		//public static final int TEMPERATURE = 0;
+		//public static final int MOTION = 1;
+		//public static final int BRIGHTNESS = 2;
+		
+		sensorPanel.getValueProperty().set(new Value_Color_Component(""));
+		sensorPanel.getTopValueProperty().set(new Image_Color_Component(""));
+		sensorPanel.getBottomValueProperty().set(new Value_Color_Component(""));
 		
 		
 		Value_Color_Component valueComponent = new Value_Color_Component(helperClass.getSelectedSensorValue().getCurrentValue() + "" + helperClass.getSelectedSensorValue().getMeasurementUnit());
 		valueComponent.setColor(helperClass.getSelectedSensorValue().preferedColor());
 		
-		Value_Color_Component topValueComponent = new Value_Color_Component(helperClass.getTopValue().getCurrentValue() + "" + helperClass.getTopValue().getMeasurementUnit());
+
+		Image_Color_Component topValueComponent = null;
+		
+		System.out.println("> " + helperClass.getTopValue().getCurrentValue());
+		if(helperClass.getTopValue().getCurrentValue() == 1D)
+			topValueComponent = new Image_Color_Component("/icon/hi_motion.png");
+		else
+			topValueComponent = new Image_Color_Component("/icon/hi_no_motion.png");
+		
 		topValueComponent.setColor(helperClass.getTopValue().preferedColor());
+		
 		
 		Value_Color_Component bottomValueComponent = new Value_Color_Component(helperClass.getBottomValue().getCurrentValue() + "" + helperClass.getBottomValue().getMeasurementUnit());
 		bottomValueComponent.setColor(helperClass.getBottomValue().preferedColor());
