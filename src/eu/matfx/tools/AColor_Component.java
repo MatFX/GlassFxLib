@@ -15,6 +15,10 @@ public abstract class AColor_Component
 		this.value = value;
 	}
 
+	/**
+	 * get color of the component
+	 * @return
+	 */
 	public Color getColor()
 	{
 		return color;

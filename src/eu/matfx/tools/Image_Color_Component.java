@@ -12,5 +12,4 @@ public class Image_Color_Component extends AColor_Component{
 		super(imageName);
 	}
 
-	//TODO method to get the image
 }
