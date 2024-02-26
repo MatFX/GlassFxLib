@@ -235,7 +235,6 @@ public class MixedValueComponent extends AValueComponent
 		}
 		else
 		{
-			System.out.println("image value middle");
 			refreshImageContent(previous_w, previous_h, textCanvas, valueProperty);
 		}
 		
@@ -258,7 +257,6 @@ public class MixedValueComponent extends AValueComponent
 		}
 		else
 		{
-			System.out.println("image ValuteTop");
 			refreshImageContent(previous_w, previous_h, topCanvas, valueTopProperty);
 		}
 
@@ -280,7 +278,6 @@ public class MixedValueComponent extends AValueComponent
 		}
 		else
 		{
-			System.out.println("image value bottom");
 			refreshImageContent(previous_w, previous_h, bottomCanvas, valueBottomProperty);
 		}
 
@@ -293,7 +290,6 @@ public class MixedValueComponent extends AValueComponent
 	
 	private void refreshImageContent(double previous_w, double previous_h, Canvas canvas, SimpleObjectProperty<AColor_Component> simpleObjectProperty)
 	{
-		System.out.println("clearImageContent");
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		gc.clearRect(0, 0, previous_w, previous_h);
 		

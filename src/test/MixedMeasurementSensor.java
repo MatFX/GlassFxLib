@@ -43,7 +43,7 @@ public class MixedMeasurementSensor extends Application
 	public void start(Stage primaryStage) throws Exception {
 		
 		BorderPane pane = new BorderPane();
-		helperClass.setCurrentSensorToShow(1);
+		helperClass.setCurrentSensorToShow(0);
 		drawTheValues();
 	
 		sensorPanel.getCommandProperty().addListener(new ChangeListener<Command>()
@@ -116,10 +116,6 @@ public class MixedMeasurementSensor extends Application
         ScrollPane scrollRight = new ScrollPane();
         scrollRight.setContent(vBoxControl); 
         pane.setRight(scrollRight);
-        
-        
-//        Label labelTransparenceBorder = new Label("Transparence border: ");
-//        labelTransparenceBorder.setTextFill(Color.web("#FFFFFF80"));
         
         HBox checkButtonBox = new HBox(5);
         
@@ -270,43 +266,50 @@ public class MixedMeasurementSensor extends Application
 
 	private void drawTheValues() {
 		
+		//Temp und BRIGHTNESS sind values
 		
-		//TODO draw the values muss auf den Index achten
-		//muss geändert werden, weil nun die Color_Component als objekt unterschiedlich sein können
+		//motion ist bild
 		
-		
-		//public static final int TEMPERATURE = 0;
-		//public static final int MOTION = 1;
-		//public static final int BRIGHTNESS = 2;
-		
-		sensorPanel.getValueProperty().set(new Value_Color_Component(""));
-		sensorPanel.getTopValueProperty().set(new Image_Color_Component(""));
-		sensorPanel.getBottomValueProperty().set(new Value_Color_Component(""));
+		Value_Color_Component valueTempComponet = new Value_Color_Component(helperClass.getSensorValue(HelperClassMixedValues.TEMPERATURE).getCurrentValue() + "" + helperClass.getSensorValue(HelperClassMixedValues.TEMPERATURE).getMeasurementUnit());
+		valueTempComponet.setColor(helperClass.getSensorValue(HelperClassMixedValues.TEMPERATURE).preferedColor());
+	
+		Value_Color_Component valueBrightnessComponet = new Value_Color_Component(helperClass.getSensorValue(HelperClassMixedValues.BRIGHTNESS).getCurrentValue() + "" + helperClass.getSensorValue(HelperClassMixedValues.BRIGHTNESS).getMeasurementUnit());
+		valueBrightnessComponet.setColor(helperClass.getSensorValue(HelperClassMixedValues.BRIGHTNESS).preferedColor());
 		
 		
-		Value_Color_Component valueComponent = new Value_Color_Component(helperClass.getSelectedSensorValue().getCurrentValue() + "" + helperClass.getSelectedSensorValue().getMeasurementUnit());
-		valueComponent.setColor(helperClass.getSelectedSensorValue().preferedColor());
+		Image_Color_Component valueMotionComponent = null;
 		
-
-		Image_Color_Component topValueComponent = null;
-		
-		System.out.println("> " + helperClass.getTopValue().getCurrentValue());
-		if(helperClass.getTopValue().getCurrentValue() == 1D)
-			topValueComponent = new Image_Color_Component("/icon/hi_motion.png");
+		if(helperClass.getSensorValue(HelperClassMixedValues.MOTION).getCurrentValue() == 1D)
+			valueMotionComponent = new Image_Color_Component("/icon/hi_motion.png");
 		else
-			topValueComponent = new Image_Color_Component("/icon/hi_no_motion.png");
+			valueMotionComponent = new Image_Color_Component("/icon/hi_no_motion.png");
 		
-		topValueComponent.setColor(helperClass.getTopValue().preferedColor());
+		valueMotionComponent.setColor(helperClass.getSensorValue(HelperClassMixedValues.MOTION).preferedColor());
 		
-		
-		Value_Color_Component bottomValueComponent = new Value_Color_Component(helperClass.getBottomValue().getCurrentValue() + "" + helperClass.getBottomValue().getMeasurementUnit());
-		bottomValueComponent.setColor(helperClass.getBottomValue().preferedColor());
-		
-		
-		sensorPanel.getValueProperty().set(valueComponent);
-		sensorPanel.getTopValueProperty().set(topValueComponent);
-		sensorPanel.getBottomValueProperty().set(bottomValueComponent);
-		
+		//which component will be draw in the middle?
+		switch(helperClass.getCurrentSensorToShow())
+		{
+			case HelperClassMixedValues.TEMPERATURE:
+				
+				sensorPanel.getValueProperty().set(valueTempComponet);
+				sensorPanel.getTopValueProperty().set(valueBrightnessComponet);
+				sensorPanel.getBottomValueProperty().set(valueMotionComponent);
+				break;
+			
+			case HelperClassMixedValues.BRIGHTNESS:
+				sensorPanel.getValueProperty().set(valueBrightnessComponet);
+				sensorPanel.getTopValueProperty().set(valueMotionComponent);
+				sensorPanel.getBottomValueProperty().set(valueTempComponet);
+				break;
+			case HelperClassMixedValues.MOTION:
+				
+				sensorPanel.getValueProperty().set(valueMotionComponent);
+				sensorPanel.getTopValueProperty().set(valueTempComponet);
+				sensorPanel.getBottomValueProperty().set(valueBrightnessComponet);
+				break;
+				
+			
+		}
 	}
 
 	/**

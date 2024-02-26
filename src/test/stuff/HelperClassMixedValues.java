@@ -15,8 +15,9 @@ public class HelperClassMixedValues
 {
 
 	public static final int TEMPERATURE = 0;
-	public static final int MOTION = 1;
-	public static final int BRIGHTNESS = 2;
+	public static final int BRIGHTNESS = 1;
+	public static final int MOTION = 2;
+	
 	
 	
 	
@@ -59,7 +60,6 @@ public class HelperClassMixedValues
 
 	public void setCurrentSensorToShow(int val) {
 		currentSensorToShow = val;
-		System.out.println("currentSensorToShow " + currentSensorToShow);
 	}
 
 	public int getMapSize() 
@@ -89,6 +89,11 @@ public class HelperClassMixedValues
 	public SensorValue getSelectedSensorValue() 
 	{
 		return sensorMap.get(currentSensorToShow).get(0);
+	}
+	
+	public SensorValue getSensorValue(int indexFromMap)
+	{
+		return sensorMap.get(indexFromMap).get(0);
 	}
 
 	public void subCurrentSensorToShow() {
