@@ -16,11 +16,13 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -140,7 +142,7 @@ public class MixedMeasurementSensor extends Application
         vBoxControl.getChildren().addAll(checkButtonBox);
         
         HBox checkHBox = new HBox(5);
-      // checkHBox.setPadding(new Insets(5,5,5,5));
+     
         
         Label checkLabel = new Label("Transparence border:");
         checkLabel.setTextFill(Color.web("#FFFFFF80"));
@@ -215,6 +217,10 @@ public class MixedMeasurementSensor extends Application
 				
 			}});
         vBoxControl.getChildren().addAll(labelTransparenz, sliderTransparence);
+       
+        
+        
+        
         
         
         VBox vBoxBackgroundControl = new VBox(10);
@@ -237,8 +243,38 @@ public class MixedMeasurementSensor extends Application
             }
         });
         vBoxBackgroundControl.getChildren().addAll(labelBackground, colorPickerBackground);
-        pane.setLeft(vBoxBackgroundControl);
         
+        Label labelButton = new Label("Change motion pic");
+        labelButton.setTextFill(Color.web("#FFFFFF80"));
+        
+       
+        ToggleButton toggleButton = new ToggleButton("Motion detected");
+        toggleButton.setSelected(true);
+        toggleButton.setPrefWidth(135);
+        HBox.setHgrow(toggleButton, Priority.ALWAYS);
+        toggleButton.setOnAction(new EventHandler<ActionEvent>(){
+
+			@Override
+			public void handle(ActionEvent var1) {
+				if(toggleButton.isSelected())
+				{
+					toggleButton.setText("Motion detected");
+					helperClass.getSensorValue(HelperClassMixedValues.MOTION).setCurrentValue(1D);
+				}
+				else
+				{
+					toggleButton.setText("No motion detected");
+					helperClass.getSensorValue(HelperClassMixedValues.MOTION).setCurrentValue(0D);
+				}
+				drawTheValues();
+			}
+        });
+      
+        
+        vBoxBackgroundControl.getChildren().addAll(labelButton, toggleButton);
+        
+        
+        pane.setLeft(vBoxBackgroundControl);
         pane.setBackground(new Background(new BackgroundFill(Color.DARKSLATEGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
 
         Scene scene = new Scene(pane);
@@ -280,9 +316,9 @@ public class MixedMeasurementSensor extends Application
 		Image_Color_Component valueMotionComponent = null;
 		
 		if(helperClass.getSensorValue(HelperClassMixedValues.MOTION).getCurrentValue() == 1D)
-			valueMotionComponent = new Image_Color_Component("/icon/hi_motion.png");
+			valueMotionComponent = new Image_Color_Component("hi_motion.png");
 		else
-			valueMotionComponent = new Image_Color_Component("/icon/hi_no_motion.png");
+			valueMotionComponent = new Image_Color_Component("hi_no_motion.png");
 		
 		valueMotionComponent.setColor(helperClass.getSensorValue(HelperClassMixedValues.MOTION).preferedColor());
 		

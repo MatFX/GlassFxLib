@@ -4,6 +4,7 @@ import eu.matfx.component.ButtonRectangle;
 import eu.matfx.component.ButtonRectangle.PositionGradient;
 import eu.matfx.tools.AColor_Component;
 import eu.matfx.tools.Command;
+import eu.matfx.tools.ImageLoader;
 import eu.matfx.tools.UIToolBox;
 import eu.matfx.tools.Value_Color_Component;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -13,6 +14,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -297,10 +299,70 @@ public class MixedValueComponent extends AValueComponent
 		double y = canvas.getLayoutY();
 		double newCanvasWidth = canvas.getWidth();
 		double newCanvasHeight = canvas.getHeight();
-		gc.setFill(Color.RED);
-		gc.fillRect(0, 0, newCanvasWidth, newCanvasHeight);
 		
 		
+		double middle_x = newCanvasWidth/2d;
+		double middle_y = newCanvasHeight/2d;
+		
+		
+		Image rawImage = ImageLoader.getImageFromIconFolder(simpleObjectProperty.get().getValue());
+		
+		//bei Gleichheit 1
+		//Breite größer dann Wert > 1
+		//Höhe größer dann Wert < 1
+		double ratio = rawImage.getWidth() / rawImage.getHeight();
+	
+		double newIconWidth = newCanvasWidth * 0.9;
+		double newIconHeight = newCanvasHeight * 0.9;
+		if(ratio == 1)
+		{
+			if(newCanvasWidth <= newCanvasHeight)
+			{
+				newIconHeight = newIconWidth;
+			}
+			else
+			{
+				//im anderen Fall ist die Zeichenfläche breiter als höher
+				newIconWidth = newIconHeight;
+			}
+		}
+		else if(ratio < 1)
+		{
+			if(newCanvasWidth <= newCanvasHeight)
+			{
+				newIconHeight = (newIconWidth / ratio);
+			}
+			else
+			{
+				newIconWidth = newIconHeight * ratio;
+			}
+		}
+		else if(ratio > 1)
+		{
+			if(newCanvasWidth <= newCanvasHeight)
+			{
+				newIconHeight = (newIconWidth / ratio);
+			}
+			else
+			{
+				newIconWidth = newIconHeight * ratio;
+			}
+		}
+		
+		//calculate x und y to set the image in the middle of the canvas area		
+		double halfedWidth = newIconWidth/2d;
+		
+		double newXLocation = middle_x - halfedWidth;
+		
+		double halfedHeight = newIconHeight / 2d;
+		
+		double newYLocation = middle_y - halfedHeight;
+	
+		Image scaledImage = ImageLoader.getImageFromIconFolder(simpleObjectProperty.get().getValue(), newIconWidth, newIconHeight, false, true);
+		
+		Image coloredImage = UIToolBox.getColorizedImage(scaledImage, baseColor.get());
+		
+		gc.drawImage(coloredImage, newXLocation, newYLocation);
 		
 	}
 
