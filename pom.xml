@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>eu.matfx</groupId>
   <artifactId>glassfxlib</artifactId>
-  <version>0.0.8</version>
+  <version>0.0.10</version>
   <name>GlassFXLib</name>
   <description>GlassFXLib is a JavaFX library to visulize states from sensor or actuator</description>
   <url>https://github.com/MatFX/GlassFxLib/wiki</url>
