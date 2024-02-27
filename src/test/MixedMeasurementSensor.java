@@ -269,9 +269,26 @@ public class MixedMeasurementSensor extends Application
 				drawTheValues();
 			}
         });
-      
-        
         vBoxBackgroundControl.getChildren().addAll(labelButton, toggleButton);
+      
+        Label labelIconColorPicker = new Label("Icon color");
+        labelIconColorPicker.setTextFill(Color.web("#FFFFFF80"));
+        
+        ColorPicker colorPickerIcon = new ColorPicker();
+        colorPickerIcon.setValue(Color.DARKSLATEGRAY);
+        colorPickerIcon.setOnAction(new EventHandler<ActionEvent>() {
+            @Override 
+            public void handle(ActionEvent e)
+            {
+            	Color colorSelected = colorPickerIcon.getValue();
+            	helperClass.getSensorValue(HelperClassMixedValues.MOTION).setPreferedColor(colorSelected);
+            	drawTheValues();
+             	
+            }
+        });
+        
+        
+        vBoxBackgroundControl.getChildren().addAll(labelIconColorPicker, colorPickerIcon);
         
         
         pane.setLeft(vBoxBackgroundControl);

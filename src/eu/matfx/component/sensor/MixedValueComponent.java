@@ -360,7 +360,11 @@ public class MixedValueComponent extends AValueComponent
 	
 		Image scaledImage = ImageLoader.getImageFromIconFolder(simpleObjectProperty.get().getValue(), newIconWidth, newIconHeight, false, true);
 		
-		Image coloredImage = UIToolBox.getColorizedImage(scaledImage, baseColor.get());
+		Image coloredImage = null;
+		if(simpleObjectProperty.get().getColor() == null)
+			coloredImage = UIToolBox.getColorizedImage(scaledImage, baseColor.get());
+		else
+			coloredImage = UIToolBox.getColorizedImage(scaledImage, simpleObjectProperty.get().getColor());
 		
 		gc.drawImage(coloredImage, newXLocation, newYLocation);
 		
