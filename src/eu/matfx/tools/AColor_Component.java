@@ -1,5 +1,6 @@
 package eu.matfx.tools;
 
+
 import javafx.scene.paint.Color;
 
 public abstract class AColor_Component 
@@ -38,5 +39,6 @@ public abstract class AColor_Component
 	{
 		return value;
 	}
+
 
 }

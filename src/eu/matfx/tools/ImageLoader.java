@@ -8,9 +8,8 @@ import java.io.InputStream;
 import javafx.scene.image.Image;
 
 /**
- * Load images from the definied resource folder
+ * Load images from the definied resource folder; only needed for the examples.
  * @author m.goerlich
- * TODO abstract class and override the getImage methods in the application
  */
 public class ImageLoader 
 {

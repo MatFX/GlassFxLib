@@ -5,6 +5,7 @@ import eu.matfx.component.ButtonRectangle.PositionGradient;
 import eu.matfx.tools.AColor_Component;
 import eu.matfx.tools.Command;
 import eu.matfx.tools.ImageLoader;
+import eu.matfx.tools.Image_Color_Component;
 import eu.matfx.tools.UIToolBox;
 import eu.matfx.tools.Value_Color_Component;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -237,7 +238,7 @@ public class MixedValueComponent extends AValueComponent
 		}
 		else
 		{
-			refreshImageContent(previous_w, previous_h, textCanvas, valueProperty);
+			refreshImageContent(previous_w, previous_h, textCanvas, (Image_Color_Component) valueProperty.get());
 		}
 		
 		previous_w = topCanvas.getWidth();
@@ -259,7 +260,7 @@ public class MixedValueComponent extends AValueComponent
 		}
 		else
 		{
-			refreshImageContent(previous_w, previous_h, topCanvas, valueTopProperty);
+			refreshImageContent(previous_w, previous_h, topCanvas, (Image_Color_Component) valueTopProperty.get());
 		}
 
 		previous_w = bottomCanvas.getWidth();
@@ -280,7 +281,7 @@ public class MixedValueComponent extends AValueComponent
 		}
 		else
 		{
-			refreshImageContent(previous_w, previous_h, bottomCanvas, valueBottomProperty);
+			refreshImageContent(previous_w, previous_h, bottomCanvas,(Image_Color_Component) valueBottomProperty.get());
 		}
 
 		button_down.refreshSize(width_component, height_component);
@@ -290,8 +291,9 @@ public class MixedValueComponent extends AValueComponent
 		
 	}
 	
-	private void refreshImageContent(double previous_w, double previous_h, Canvas canvas, SimpleObjectProperty<AColor_Component> simpleObjectProperty)
+	private void refreshImageContent(double previous_w, double previous_h, Canvas canvas, Image_Color_Component imageColorComponent)
 	{
+		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		gc.clearRect(0, 0, previous_w, previous_h);
 		
@@ -304,8 +306,7 @@ public class MixedValueComponent extends AValueComponent
 		double middle_x = newCanvasWidth/2d;
 		double middle_y = newCanvasHeight/2d;
 		
-		
-		Image rawImage = ImageLoader.getImageFromIconFolder(simpleObjectProperty.get().getValue());
+		Image rawImage = imageColorComponent.getImageRaw();
 		
 		//bei Gleichheit 1
 		//Breite größer dann Wert > 1
@@ -358,13 +359,15 @@ public class MixedValueComponent extends AValueComponent
 		
 		double newYLocation = middle_y - halfedHeight;
 	
-		Image scaledImage = ImageLoader.getImageFromIconFolder(simpleObjectProperty.get().getValue(), newIconWidth, newIconHeight, false, true);
+		Image scaledImage = imageColorComponent.getScaledImageIcon(newIconWidth, newIconHeight, false, true);
+		
+		
 		
 		Image coloredImage = null;
-		if(simpleObjectProperty.get().getColor() == null)
+		if(imageColorComponent.getColor() == null)
 			coloredImage = UIToolBox.getColorizedImage(scaledImage, baseColor.get());
 		else
-			coloredImage = UIToolBox.getColorizedImage(scaledImage, simpleObjectProperty.get().getColor());
+			coloredImage = UIToolBox.getColorizedImage(scaledImage, imageColorComponent.getColor());
 		
 		gc.drawImage(coloredImage, newXLocation, newYLocation);
 		
