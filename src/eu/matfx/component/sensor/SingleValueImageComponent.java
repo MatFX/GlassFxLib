@@ -19,7 +19,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 /**
- * simple sensor component with two buttons to change the view; 
+ * Simple sensor component with two buttons to change the view; 
  * @author m.goerlich
  *
  */

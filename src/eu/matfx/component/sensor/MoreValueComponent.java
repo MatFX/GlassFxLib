@@ -19,6 +19,11 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+/**
+ * Show maximum three different values on screen.
+ * @author m.goerlich
+ *
+ */
 public class MoreValueComponent extends AValueComponent
 {
 	

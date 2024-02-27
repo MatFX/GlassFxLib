@@ -4,7 +4,6 @@ import eu.matfx.component.ButtonRectangle;
 import eu.matfx.component.ButtonRectangle.PositionGradient;
 import eu.matfx.tools.AColor_Component;
 import eu.matfx.tools.Command;
-import eu.matfx.tools.ImageLoader;
 import eu.matfx.tools.Image_Color_Component;
 import eu.matfx.tools.UIToolBox;
 import eu.matfx.tools.Value_Color_Component;
@@ -23,9 +22,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 /**
- * presentation of text oder images as values.
+ * Presentation of text or images as values (maximum three values).
  * @author Matthias
- *
  */
 public class MixedValueComponent extends AValueComponent
 {

@@ -7,11 +7,24 @@ package eu.matfx.tools;
  */
 public enum Command
 {
-	PREVIOUS_SENSOR_VALUE, NEXT_SENSOR_VALUE, AUTO_CHANGE,
+	/**
+	 * switch to the previous value
+	 */
+	PREVIOUS_SENSOR_VALUE, 
+	
+	/**
+	 * switch to the next value
+	 */
+	NEXT_SENSOR_VALUE, 
+	
+	/**
+	 * switches the values in the auto mode
+	 */
+	AUTO_CHANGE,
 	
 
 	/**
-	 * <br>you need the reset as a "acknowledge" from outside.
+	 * You need the reset as a "acknowledge" from outside.
 	 */
 	RESET_COMMAND;
 }

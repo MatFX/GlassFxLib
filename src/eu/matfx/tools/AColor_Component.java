@@ -9,7 +9,6 @@ public abstract class AColor_Component
 	protected String value;
 	
 	protected Color color;
-	
 
 	protected AColor_Component(String value) 
 	{
@@ -17,7 +16,7 @@ public abstract class AColor_Component
 	}
 
 	/**
-	 * get color of the component
+	 * Get color of the component
 	 * @return
 	 */
 	public Color getColor()
@@ -32,7 +31,7 @@ public abstract class AColor_Component
 	}
 	
 	/**
-	 * return the string value eg path to image or formatted text value
+	 * Return the string value eg path to image or formatted text value
 	 * @return
 	 */
 	public String getValue()

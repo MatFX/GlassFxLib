@@ -14,6 +14,10 @@ public class Image_Color_Component extends AColor_Component{
 		super(imageName);
 	}
 	
+	/**
+	 * Read out the image; over the default path or the path of the application
+	 * @return
+	 */
 	public Image getImageRaw()
 	{
 		Image image = getImageFromOwnerImplementation();
@@ -23,7 +27,7 @@ public class Image_Color_Component extends AColor_Component{
 	}
 
 	/**
-	 * to override the method in the application
+	 * To override the method in the application
 	 * @param value
 	 * @return
 	 */
@@ -33,7 +37,8 @@ public class Image_Color_Component extends AColor_Component{
 	}
 
 	/**
-	 * 
+	 * Get the scaled image; 
+	 * <br>Reading from the path of the application or over the default path.
 	 * @param newIconWidth
 	 * @param newIconHeight
 	 * @param b
@@ -50,7 +55,7 @@ public class Image_Color_Component extends AColor_Component{
 	}
 
 	/**
-	 * to override the method in the application
+	 * To override the method in the application
 	 * @param newIconWidth
 	 * @param newIconHeight
 	 * @param preservationRatio

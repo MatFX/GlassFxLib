@@ -11,7 +11,7 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 
 /**
- * tiny button, on top or bottom of the sensor component.
+ * Tiny button, on top or bottom of the sensor component.
  * @author m.goerlich
  *
  */
