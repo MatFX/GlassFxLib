@@ -55,7 +55,7 @@ public class Image_Color_Component extends AColor_Component{
 	}
 
 	/**
-	 * To override the method in the application
+	 * To override the method in the application.
 	 * @param newIconWidth
 	 * @param newIconHeight
 	 * @param preservationRatio
