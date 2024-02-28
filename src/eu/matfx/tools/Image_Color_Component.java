@@ -16,7 +16,7 @@ public class Image_Color_Component extends AColor_Component{
 	
 	/**
 	 * Read out the image; over the default path or the path of the application
-	 * @return
+	 * @return the image for the view
 	 */
 	public Image getImageRaw()
 	{
@@ -29,7 +29,7 @@ public class Image_Color_Component extends AColor_Component{
 	/**
 	 * To override the method in the application
 	 * @param value
-	 * @return
+	 * @return image or null
 	 */
 	public Image getImageFromOwnerImplementation()
 	{
@@ -43,7 +43,7 @@ public class Image_Color_Component extends AColor_Component{
 	 * @param newIconHeight
 	 * @param b
 	 * @param c
-	 * @return
+	 * @return scaled image for the view
 	 */
 	public Image getScaledImageIcon(double newIconWidth, double newIconHeight, boolean preservationRatio, boolean smooth) 
 	{
@@ -60,7 +60,7 @@ public class Image_Color_Component extends AColor_Component{
 	 * @param newIconHeight
 	 * @param preservationRatio
 	 * @param smooth
-	 * @return
+	 * @return scaled image or null
 	 */
 	public Image getScaledImageFromOwnerImplementation(double newIconWidth, double newIconHeight, boolean preservationRatio, boolean smooth) 
 	{

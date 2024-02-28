@@ -17,7 +17,7 @@ public abstract class AColor_Component
 
 	/**
 	 * Get color of the component
-	 * @return
+	 * @return color to use on component
 	 */
 	public Color getColor()
 	{
@@ -32,7 +32,7 @@ public abstract class AColor_Component
 	
 	/**
 	 * Return the string value eg path to image or formatted text value
-	 * @return
+	 * @return string value
 	 */
 	public String getValue()
 	{

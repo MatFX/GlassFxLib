@@ -27,7 +27,7 @@ public class UIToolBox
 
 	/**
 	 * produce a gap in a horizontal layout
-	 * @return
+	 * @return horizontal space area
 	 */
 	public static Node createHorizontalSpacer() 
 	{
@@ -38,7 +38,7 @@ public class UIToolBox
 	
 	/**
 	 * produce a gap in a vertical layout
-	 * @return
+	 * @return vertical space area
 	 */
 	public static Node createVerticalSpacer()
 	{
@@ -108,7 +108,7 @@ public class UIToolBox
 	 * Calculate the ratio 
 	 * @param baseValue
 	 * @param partValue
-	 * @return
+	 * @return calculated ratio
 	 */
 	public static double getPointRatio(double baseValue, double partValue)
 	{
@@ -120,7 +120,7 @@ public class UIToolBox
 	 * @param rectangle_w
 	 * @param rectangle_h
 	 * @param circle_radius
-	 * @return
+	 * @return calculated ratio
 	 */
 	public static double getAreaRatio(double rectangle_w, double rectangle_h, double circle_radius)
 	{
@@ -132,7 +132,7 @@ public class UIToolBox
 	 * @param rectangle_w
 	 * @param rectangle_h
 	 * @param radius_ratio
-	 * @return
+	 * @return calculated radius
 	 */
 	public static double getRadiusFromRatio(double rectangle_w, double rectangle_h, double radius_ratio)
 	{
@@ -157,7 +157,7 @@ public class UIToolBox
 	 * to colorize a image 
 	 * @param imageToRecolor
 	 * @param newColor
-	 * @return
+	 * @return colorized image
 	 */
 	public static Image getColorizedImage(Image imageToRecolor, Color newColor) 
 	{
@@ -191,7 +191,7 @@ public class UIToolBox
 	 * @param green
 	 * @param blue
 	 * @param alpha
-	 * @return
+	 * @return calculated web color string
 	 */
 	public static String getWebColorString(double red, double green, double blue, double alpha) 
 	{

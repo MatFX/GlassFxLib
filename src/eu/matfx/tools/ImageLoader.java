@@ -33,7 +33,7 @@ public class ImageLoader
 	/**
 	 * pure image from the folder
 	 * @param fileName
-	 * @return
+	 * @return image from the glassfixlib 
 	 */
 	public static Image getImageFromIconFolder(String fileName)
 	{
