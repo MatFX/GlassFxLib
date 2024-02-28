@@ -289,7 +289,7 @@ public class SingleValueImageComponent extends AValueComponent
 
 	/**
 	 * value property to set text from outer the class
-	 * @return image property
+	 * @return value property
 	 */
 	public SimpleStringProperty getValueProperty() {
 		return valueProperty;
@@ -297,7 +297,7 @@ public class SingleValueImageComponent extends AValueComponent
 	
 	/**
 	 * image property to set icon from outer the class.
-	 * @return
+	 * @return image property
 	 */
 	public SimpleStringProperty getImageProperty() 
 	{
