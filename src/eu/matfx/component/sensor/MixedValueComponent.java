@@ -32,8 +32,7 @@ public class MixedValueComponent extends AValueComponent
 	private double width_component = 90;
 	private double height_component = 100;
 	
-	//TODO change textCanvas to other name
-	private Canvas topCanvas, bottomCanvas, textCanvas;
+	private Canvas topCanvas, bottomCanvas, mainCanvas;
 	
 	protected ButtonRectangle button_up, button_down;
 	
@@ -59,7 +58,7 @@ public class MixedValueComponent extends AValueComponent
 
 		//TODO gleiche wie bei more Value Component
 		topCanvas = new Canvas();
-		textCanvas = new Canvas();
+		mainCanvas = new Canvas();
 		bottomCanvas = new Canvas();
 		
 		button_down = new ButtonRectangle(PositionGradient.FROM_UP_TO_DOWN, 0.23555555562222225, 0.92000000001, 0.5288888887222222, 0.07999999995, 0.022222222222222223);
@@ -135,7 +134,7 @@ public class MixedValueComponent extends AValueComponent
 		
 	
 	
-		this.getChildren().addAll(base_background_component, topCanvas, textCanvas, bottomCanvas, button_down, button_up);
+		this.getChildren().addAll(base_background_component, topCanvas, mainCanvas, bottomCanvas, button_down, button_up);
 		
 		
 	}
@@ -216,8 +215,8 @@ public class MixedValueComponent extends AValueComponent
 		base_background_component.setFill(lg);
 		
 
-		double previous_w = textCanvas.getWidth();
-		double previous_h = textCanvas.getHeight();
+		double previous_w = mainCanvas.getWidth();
+		double previous_h = mainCanvas.getHeight();
 		
 		double newX = width_component * 0.03911901127777778;
 		double newY = height_component * 0.33381546094000003;
@@ -226,17 +225,17 @@ public class MixedValueComponent extends AValueComponent
 		double newHeight = height_component * 0.32;
 	
 
-		textCanvas.setWidth(newWidth);
-		textCanvas.setHeight(newHeight);
-		textCanvas.relocate(newX, newY);
+		mainCanvas.setWidth(newWidth);
+		mainCanvas.setHeight(newHeight);
+		mainCanvas.relocate(newX, newY);
 		
 		if(valueProperty.get() instanceof Value_Color_Component)
 		{
-			refreshTextContent(previous_w, previous_h, textCanvas, valueProperty);
+			refreshTextContent(previous_w, previous_h, mainCanvas, valueProperty);
 		}
 		else
 		{
-			refreshImageContent(previous_w, previous_h, textCanvas, (Image_Color_Component) valueProperty.get());
+			refreshImageContent(previous_w, previous_h, mainCanvas, (Image_Color_Component) valueProperty.get());
 		}
 		
 		previous_w = topCanvas.getWidth();
