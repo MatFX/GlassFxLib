@@ -191,7 +191,7 @@ public abstract class AValueComponent extends Region
 
 	/**
 	 * Property to change the blur of the frame from outside the component
-	 * @return
+	 * @return Property from the blur radius
 	 */
 	public SimpleIntegerProperty getBlurRadiusProperty()
 	{
@@ -200,7 +200,7 @@ public abstract class AValueComponent extends Region
 
 	/**
 	 *  Property to change the alpha channel of the base backround (stop values from the linear gradient)
-	 * @return
+	 * @return Property of the alpha channel
 	 */
 	public SimpleIntegerProperty getAlphaChannelProperty()
 	{
@@ -219,12 +219,11 @@ public abstract class AValueComponent extends Region
 		this.baseColor.set(colorSelected);
 	}
 	
-	
-	
 
+	
 	/**
 	 * for listing the commands
-	 * @return
+	 * @return Property of command enum
 	 */
 	public SimpleObjectProperty<Command> getCommandProperty() 
 	{
