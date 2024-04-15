@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>eu.matfx</groupId>
   <artifactId>glassfxlib</artifactId>
-  <version>0.0.11</version>
+  <version>0.0.13</version>
   <name>GlassFXLib</name>
   <description>GlassFXLib is a JavaFX library to visulize states from sensor or actuator</description>
   <url>https://github.com/MatFX/GlassFxLib/wiki</url>
@@ -42,7 +42,8 @@
 					</dependency>
 				</dependencies>
 	     	 </plugin>
-      
+	     	 
+	     	
 			<plugin>
 	        <groupId>org.apache.maven.plugins</groupId>
 	        <artifactId>maven-jar-plugin</artifactId>
@@ -54,6 +55,26 @@
 	          </excludes>
 	        </configuration>
 	      	</plugin>
+	      	
+	      	 <plugin>
+	     	 	   <artifactId>maven-resources-plugin</artifactId>
+	     	 	   <version>3.3.1</version>
+	     	 	   <configuration>
+	     	 	   		
+	     	 	   			<outputDirectory>./target/classes/eu/matfx/tools</outputDirectory>
+	     	 	   			<resources>
+	     	 	   				<resource>
+	     	 	   					<directory>src/eu/matfx/tools</directory>
+	     	 	   					<includes>
+	     	 	   						<include>*.png</include>
+	     	 	   					</includes>
+	     	 	   					<filtering>true</filtering>
+	     	 	   				</resource>
+	     	 	   			</resources>
+	     	 	   		
+	     	 	   </configuration> 	
+	     	 </plugin>
+      
 	      
 	        <plugin>
 	        <groupId>org.apache.maven.plugins</groupId>
@@ -74,14 +95,14 @@
             </executions>
 	        </plugin>
 	      
-	      
+	     
 	      <plugin>
 	       	<groupId>org.apache.maven.plugins</groupId>
 	       	<artifactId>maven-javadoc-plugin</artifactId>
 	       	<version>3.2.0</version>
 	       	<configuration>
 	            <failOnError>false</failOnError>
-	       		<!-- no classes or packages from the test -->
+	       		
 	       		<excludePackageNames>test:test.*</excludePackageNames>	 	 
 	       	</configuration>
 	       
