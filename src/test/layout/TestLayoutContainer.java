@@ -8,7 +8,7 @@ import java.util.Random;
 import eu.matfx.component.sensor.MixedValueComponent;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import test.stuff.HelperClassBuildMap;
 import test.stuff.SensorValue;
@@ -17,6 +17,7 @@ public class TestLayoutContainer extends Application
 {
 	private HashMap<String, List<SensorValue>> sensorenMap = new HashMap<String, List<SensorValue>>();
 	
+	private MasonryPane masonryPane = new MasonryPane(5);
 	
 	public static void main(String[] args) {
         Application.launch(args);
@@ -27,13 +28,7 @@ public class TestLayoutContainer extends Application
 	{
 		
 		sensorenMap = HelperClassBuildMap.getBuildedMap();
-		
-		
-		GridPane gridPane = new GridPane();
-		//gridPane.setGridLinesVisible(true);
-		
-		int columnIndex = 0;
-		int rowIndex = 0;
+	
 		Random rand = new Random();
 		for(Entry<String, List<SensorValue>> entry : sensorenMap.entrySet())
 		{
@@ -46,29 +41,22 @@ public class TestLayoutContainer extends Application
 		    
 		    sensorPanel.setMaxWidth(prefWidth);
 		    sensorPanel.setMinHeight(prefHeight);
-		    
-			
-			gridPane.add(sensorPanel, columnIndex, rowIndex);
-			
-			columnIndex++;
-			if(columnIndex == 3)
-			{
-				columnIndex = 0;
-				rowIndex++;
-			}
+	        masonryPane.getChildren().add(sensorPanel);
+
 				
 		}
 		
 		
-		//gridPane.add(child, columnIndex, rowIndex);
+		
+		ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(masonryPane);
+        scrollPane.setFitToWidth(true);  // passt die Breite an
+        scrollPane.setPannable(true);    // erlaubt Ziehen mit Maus
 		
 		
 		
 		
-		
-		
-		
-		Scene scene = new Scene(gridPane);
+        Scene scene = new Scene(scrollPane, 800, 600);
 		 
 		
 		primaryStage.setTitle("Sensor Panel");

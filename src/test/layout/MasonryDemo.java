@@ -6,7 +6,6 @@ import javafx.beans.Observable;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.Node;
 import javafx.stage.Stage;
@@ -20,7 +19,8 @@ public class MasonryDemo extends Application {
     @Override
     public void start(Stage primaryStage) {
         MasonryPane masonryPane = new MasonryPane(10); // Abstand 10px
-
+        
+      
         // ✅ Kacheln mit zufälliger Größe und Farbe
         for (int i = 0; i < 40; i++) {
             double width = 80 + Math.random() * 80;
@@ -30,10 +30,16 @@ public class MasonryDemo extends Application {
             masonryPane.getChildren().add(tile);
         }
 
-        ScrollPane scrollPane = new ScrollPane(masonryPane);
-        scrollPane.setFitToWidth(true);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(masonryPane);
+        scrollPane.setFitToWidth(true);  // passt die Breite an
+        scrollPane.setPannable(true);    // erlaubt Ziehen mit Maus
+        
+        // Setze bevorzugte Breite, damit MasonryPane korrekt layoutet
+        masonryPane.prefWidthProperty().bind(scrollPane.widthProperty());
 
-        Scene scene = new Scene(masonryPane, 800, 600);
+        
+        Scene scene = new Scene(scrollPane, 800, 600);
         primaryStage.setTitle("JavaFX Masonry Layout (sichtbar!)");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -82,7 +88,6 @@ public class MasonryDemo extends Application {
 
         @Override
         protected double computePrefHeight(double width) {
-            layoutChildren();
             double maxY = 0;
             for (Node child : getChildren()) {
                 maxY = Math.max(maxY, child.getLayoutY() + child.prefHeight(-1));
