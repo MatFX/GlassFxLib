@@ -4,6 +4,7 @@ import javafx.beans.Observable;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
+@Deprecated
 public class MasonryPane extends Pane
 {
 	 private final double spacing;
