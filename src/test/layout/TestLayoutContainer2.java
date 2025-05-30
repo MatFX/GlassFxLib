@@ -7,7 +7,9 @@ import java.util.Random;
 
 import com.jfoenix.controls.JFXMasonryPane;
 
+import eu.matfx.component.layout.ScrollJFXMasonryPane;
 import eu.matfx.component.sensor.MixedValueComponent;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
@@ -19,7 +21,10 @@ public class TestLayoutContainer2 extends Application
 {
 	private HashMap<String, List<SensorValue>> sensorenMap = new HashMap<String, List<SensorValue>>();
 	
-	private JFXMasonryPane masonryPane = new JFXMasonryPane();
+	//private JFXMasonryPane masonryPane = new JFXMasonryPane();
+	
+	private ScrollJFXMasonryPane masonryPane = new ScrollJFXMasonryPane();
+	
 	
 	public static void main(String[] args) {
         Application.launch(args);
@@ -43,22 +48,10 @@ public class TestLayoutContainer2 extends Application
 		    
 		    sensorPanel.setMaxWidth(prefWidth);
 		    sensorPanel.setMinHeight(prefHeight);
-	        masonryPane.getChildren().add(sensorPanel);
-
-				
+	        masonryPane.getJFXMasonryPane().getChildren().add(sensorPanel);
 		}
 		
-		
-		
-		ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(masonryPane);
-        scrollPane.setFitToWidth(true);  // passt die Breite an
-        scrollPane.setPannable(true);    // erlaubt Ziehen mit Maus
-		
-		
-		
-		
-        Scene scene = new Scene(scrollPane, 800, 600);
+        Scene scene = new Scene(masonryPane, 800, 600);
 		 
 		
 		primaryStage.setTitle("Sensor Panel");
