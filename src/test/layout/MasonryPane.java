@@ -1,4 +1,4 @@
-package eu.matfx.layout;
+package test.layout;
 
 import javafx.beans.Observable;
 import javafx.scene.Node;
