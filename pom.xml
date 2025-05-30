@@ -24,6 +24,17 @@
 			<email></email>
 		</developer>
   </developers>
+  
+  <dependencies>
+		<!-- https://mvnrepository.com/artifact/com.jfoenix/jfoenix -->
+		<dependency>
+		    <groupId>com.jfoenix</groupId>
+		    <artifactId>jfoenix</artifactId>
+		    <version>8.0.10</version>
+		</dependency>
+  </dependencies>
+  
+  
   <build>
     <sourceDirectory>src</sourceDirectory>
     	<plugins>

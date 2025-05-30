@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import eu.matfx.component.sensor.MixedValueComponent;
+import eu.matfx.layout.MasonryPane;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
