@@ -44,6 +44,7 @@ public class MixedMeasurementSensor extends Application
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
+		
 		BorderPane pane = new BorderPane();
 		helperClass.setCurrentSensorToShow(0);
 		drawTheValues();
