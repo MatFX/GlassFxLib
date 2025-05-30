@@ -5,14 +5,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import com.jfoenix.controls.JFXMasonryPane;
-
 import eu.matfx.component.layout.ScrollJFXMasonryPane;
 import eu.matfx.component.sensor.MixedValueComponent;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import test.stuff.HelperClassBuildMap;
 import test.stuff.SensorValue;
@@ -20,9 +16,7 @@ import test.stuff.SensorValue;
 public class TestLayoutContainer2 extends Application
 {
 	private HashMap<String, List<SensorValue>> sensorenMap = new HashMap<String, List<SensorValue>>();
-	
-	//private JFXMasonryPane masonryPane = new JFXMasonryPane();
-	
+
 	private ScrollJFXMasonryPane masonryPane = new ScrollJFXMasonryPane();
 	
 	
@@ -42,10 +36,9 @@ public class TestLayoutContainer2 extends Application
 			MixedValueComponent sensorPanel = new MixedValueComponent();
 			int prefWidth = rand.nextInt(71) + 80;
 			int prefHeight = rand.nextInt(70) + 100;
-			System.out.println("prefWidth " + prefWidth + " x " + prefHeight);
+			
 			sensorPanel.setPrefWidth(prefWidth);
 		    sensorPanel.setPrefHeight(prefHeight);
-		    
 		    sensorPanel.setMaxWidth(prefWidth);
 		    sensorPanel.setMinHeight(prefHeight);
 	        masonryPane.getJFXMasonryPane().getChildren().add(sensorPanel);
