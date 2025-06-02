@@ -9,6 +9,8 @@ import eu.matfx.component.layout.ScrollJFXMasonryPane;
 import eu.matfx.component.sensor.MixedValueComponent;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import test.stuff.HelperClassBuildMap;
 import test.stuff.SensorValue;
@@ -43,7 +45,11 @@ public class TestLayoutContainer2 extends Application
 		    sensorPanel.setMinHeight(prefHeight);
 	        masonryPane.getJFXMasonryPane().getChildren().add(sensorPanel);
 		}
-		
+		BorderPane bp = new BorderPane();
+		bp.setCenter(new Label("irgendwas mit inhalt"));
+		masonryPane.getJFXMasonryPane().getChildren().add(new Label("Test"));
+		masonryPane.getJFXMasonryPane().getChildren().add(bp);
+	
         Scene scene = new Scene(masonryPane, 800, 600);
 		 
 		
