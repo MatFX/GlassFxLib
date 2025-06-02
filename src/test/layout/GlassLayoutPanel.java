@@ -1,8 +1,11 @@
 package test.layout;
 
+import java.util.Iterator;
 import java.util.Random;
+import java.util.Set;
 
 import eu.matfx.component.layout.ScrollJFXMasonryPane;
+import eu.matfx.component.sensor.AValueComponent;
 import eu.matfx.component.sensor.MixedValueComponent;
 import eu.matfx.component.sensor.MoreValueComponent;
 import eu.matfx.component.sensor.SingleValueImageComponent;
@@ -12,9 +15,22 @@ import eu.matfx.tools.Value_Color_Component;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
+import javafx.scene.effect.InnerShadow;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import test.stuff.HelperClassMixedValues;
 import test.stuff.HelperClassTextValues;
@@ -33,15 +49,20 @@ public class GlassLayoutPanel extends Application
 	
 	private HelperClassTextValues helperClassMoreValueComponent = new HelperClassTextValues();
 	
-	private MixedValueComponent mixedVlaueComponent = new MixedValueComponent();
+	private MixedValueComponent mixedValueComponent = new MixedValueComponent();
 	
 	private HelperClassMixedValues helperClassMixedValue = new HelperClassMixedValues();
-
 	
+	private static final String SENSOR_DRAG = "sensor_drag";
+	private static final DataFormat DataFormatImageAllocation = new DataFormat(SENSOR_DRAG);
 	private void initUI() {
 		
 		singleValueImageComponent.setPrefWidth(50);
 		singleValueImageComponent.setPrefHeight(80);
+		singleValueImageComponent.setOnDragDetected(createOnDragDetected(singleValueImageComponent));
+		singleValueImageComponent.setOnDragOver(createOnDragOver(singleValueImageComponent));
+		singleValueImageComponent.setOnDragExited(createDragExited(singleValueImageComponent));
+		singleValueImageComponent.setOnDragDropped(createDragDropped(singleValueImageComponent));
 		singleValueImageComponent.getCommandProperty().addListener(new ChangeListener<Command>()
 	        {
 
@@ -73,6 +94,11 @@ public class GlassLayoutPanel extends Application
         moreValueComponent.setPrefHeight(140);
 		helperClassMoreValueComponent.setCurrentSensorToShow(0);
 		drawMoreValuesComponent();
+		moreValueComponent.setOnDragDetected(createOnDragDetected(moreValueComponent));
+		moreValueComponent.setOnDragOver(createOnDragOver(moreValueComponent));
+		moreValueComponent.setOnDragExited(createDragExited(moreValueComponent));
+		moreValueComponent.setOnDragDropped(createDragDropped(moreValueComponent));
+		
 		moreValueComponent.getCommandProperty().addListener(new ChangeListener<Command>()
         {
 
@@ -114,10 +140,14 @@ public class GlassLayoutPanel extends Application
 		masonryPane.getJFXMasonryPane().getChildren().add(moreValueComponent);
 		
 		
-		mixedVlaueComponent.setPrefWidth(120);
-		mixedVlaueComponent.setPrefHeight(140);
-		
-		mixedVlaueComponent.getCommandProperty().addListener(new ChangeListener<Command>()
+		mixedValueComponent.setPrefWidth(120);
+		mixedValueComponent.setPrefHeight(140);
+		mixedValueComponent.setOnDragDetected(createOnDragDetected(mixedValueComponent));
+		mixedValueComponent.setOnDragOver(createOnDragOver(mixedValueComponent));
+		mixedValueComponent.setOnDragExited(createDragExited(mixedValueComponent));
+		mixedValueComponent.setOnDragDropped(createDragDropped(mixedValueComponent));
+	
+		mixedValueComponent.getCommandProperty().addListener(new ChangeListener<Command>()
         {
 
 			@Override
@@ -156,13 +186,137 @@ public class GlassLayoutPanel extends Application
         	
         });
 		
+		
 		helperClassMixedValue.setCurrentSensorToShow(0);
 		drawTheValues();
 	
-		masonryPane.getJFXMasonryPane().getChildren().add(mixedVlaueComponent);
+		masonryPane.getJFXMasonryPane().getChildren().add(mixedValueComponent);
 		
 	}
 	
+	private EventHandler<? super DragEvent> createDragDropped(AValueComponent aValueComponent)
+	{
+		return new EventHandler<DragEvent>()
+		{
+
+			@Override
+			public void handle(DragEvent dragEvent) {
+				//tausch der Komponente auf der Oberfläche
+				
+				Clipboard clipboard = (Clipboard)dragEvent.getDragboard();
+				Set<DataFormat> contentTypes = clipboard.getContentTypes();
+				Iterator<DataFormat> it = contentTypes.iterator();
+				while(it.hasNext())
+				{
+					DataFormat df = it.next();
+					Set<String> identfiers =  df.getIdentifiers();
+					if(identfiers.contains(SENSOR_DRAG))
+					{
+						System.out.println("ja gefunden " + dragEvent.getGestureSource());
+						if(dragEvent.getGestureSource() instanceof AValueComponent)
+						{
+							AValueComponent sourceNode = (AValueComponent)dragEvent.getGestureSource();
+							
+							
+							int indexOfSource = masonryPane.getJFXMasonryPane().getChildren().indexOf(sourceNode);
+							System.out.println("indexOfSource " + indexOfSource);
+							int indexOfTarget = masonryPane.getJFXMasonryPane().getChildren().indexOf(aValueComponent);
+							System.out.println("indexOfTarget " + indexOfTarget);
+							
+							masonryPane.getJFXMasonryPane().getChildren().remove(sourceNode);
+							masonryPane.getJFXMasonryPane().getChildren().remove(aValueComponent);
+							
+							//Unterscheidung was als erstes wieder hinzugefügt werden soll
+							//immer der kleinste Index wird zuerst eingefügt
+							if(indexOfSource < indexOfTarget)
+							{
+								masonryPane.getJFXMasonryPane().getChildren().add(indexOfSource, aValueComponent);
+								masonryPane.getJFXMasonryPane().getChildren().add(indexOfTarget, sourceNode);
+							}
+							else
+							{
+								masonryPane.getJFXMasonryPane().getChildren().add(indexOfTarget, sourceNode);
+								masonryPane.getJFXMasonryPane().getChildren().add(indexOfSource, aValueComponent);
+							}
+							
+							
+							
+						
+							
+							
+						}
+					}
+					
+					
+				}
+				dragEvent.consume();
+				
+			}
+			
+		};
+	}
+
+	private EventHandler<? super DragEvent> createDragExited(AValueComponent aValueComponent) {
+	
+		return new EventHandler<DragEvent>(){
+
+			@Override
+			public void handle(DragEvent dragEvent)
+			{
+				aValueComponent.setEffect(null);
+				
+				
+			}
+			
+		};
+	}
+
+	private EventHandler<? super DragEvent> createOnDragOver(AValueComponent aValueComponent)
+	{
+		return new EventHandler<DragEvent>(){
+
+			@Override
+			public void handle(DragEvent dragEvent)
+			{
+				Glow glow = new Glow();
+				glow.setLevel(0.5);
+				aValueComponent.setEffect(glow);
+				dragEvent.acceptTransferModes(TransferMode.MOVE);
+				dragEvent.consume();
+				
+			}
+			
+		};
+	}
+
+	private EventHandler<? super MouseEvent> createOnDragDetected(AValueComponent aValueComponent)
+	{
+		return new EventHandler<MouseEvent>(){
+
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				Dragboard dragboard = aValueComponent.startDragAndDrop(TransferMode.MOVE);
+				
+				
+				ClipboardContent content = new ClipboardContent();
+				 content.put(DataFormatImageAllocation, "");
+				//content.put(DataFormatImageAllocation, cellNamesList);
+				//Transparenz erhalten
+				SnapshotParameters param = new SnapshotParameters();
+				param.setFill(Color.TRANSPARENT);
+				//dragboard.setDragView(canvas.snapshot(param, null));
+				
+				dragboard.setDragView(aValueComponent.snapshot(param, null));
+				//wird nicht mehr benötigt
+				dragboard.setContent(content);
+				//TODO ?
+				//mouseEvent.consume();
+				
+			}
+			
+		} ;
+	}
+
 	protected void previousMoreSensorValue() 
 	{
 		
@@ -318,21 +472,21 @@ public class GlassLayoutPanel extends Application
 		{
 			case HelperClassMixedValues.TEMPERATURE:
 				
-				mixedVlaueComponent.getValueProperty().set(valueTempComponet);
-				mixedVlaueComponent.getTopValueProperty().set(valueBrightnessComponet);
-				mixedVlaueComponent.getBottomValueProperty().set(valueMotionComponent);
+				mixedValueComponent.getValueProperty().set(valueTempComponet);
+				mixedValueComponent.getTopValueProperty().set(valueBrightnessComponet);
+				mixedValueComponent.getBottomValueProperty().set(valueMotionComponent);
 				break;
 			
 			case HelperClassMixedValues.BRIGHTNESS:
-				mixedVlaueComponent.getValueProperty().set(valueBrightnessComponet);
-				mixedVlaueComponent.getTopValueProperty().set(valueMotionComponent);
-				mixedVlaueComponent.getBottomValueProperty().set(valueTempComponet);
+				mixedValueComponent.getValueProperty().set(valueBrightnessComponet);
+				mixedValueComponent.getTopValueProperty().set(valueMotionComponent);
+				mixedValueComponent.getBottomValueProperty().set(valueTempComponet);
 				break;
 			case HelperClassMixedValues.MOTION:
 				
-				mixedVlaueComponent.getValueProperty().set(valueMotionComponent);
-				mixedVlaueComponent.getTopValueProperty().set(valueTempComponet);
-				mixedVlaueComponent.getBottomValueProperty().set(valueBrightnessComponet);
+				mixedValueComponent.getValueProperty().set(valueMotionComponent);
+				mixedValueComponent.getTopValueProperty().set(valueTempComponet);
+				mixedValueComponent.getBottomValueProperty().set(valueBrightnessComponet);
 				break;
 				
 			
