@@ -105,19 +105,23 @@ public class OwnLayoutPane extends Pane
             	do
             	{
             		Optional<Map.Entry<Node, Boolean>> minEntry = map.entrySet().stream()
-                			.filter(predicate -> predicate.getKey().getLayoutY() == ySearch 
-                			&& predicate.getValue().booleanValue() 
+                			.filter(predicate -> predicate.getValue().booleanValue() 
                 			&& !notToCheck.contains(predicate.getKey()))
                 			.min(Comparator.comparing(predicate -> predicate.getKey().getBoundsInParent().getMaxY()));
             		
+            		//minEntry vorhanden?
             		if(minEntry.isPresent())
                 	{
                 		//jetzt prüfen ob in der gleichen X-Achse noch weitere Objekte liegen
                 		y_start = minEntry.get().getKey().getLayoutY() + minEntry.get().getKey().getLayoutBounds().getHeight() + vGap + 1;
                 		x_start = minEntry.get().getKey().getLayoutX();
                 		
+                		
+                		
+                		
+                		
                 		//mit den Positionen prüfen ob  damit eine Node berührt wird
-                		BoundingBox layoutBounds =  new BoundingBox(x_start, y_start, nodeWidth, nodeHeight);
+                		BoundingBox futureBoundsBox =  new BoundingBox(x_start, y_start, nodeWidth+hGap+1, nodeHeight);
                 		
                 		boolean collides = map.entrySet().stream()
                 				.filter(entry -> entry.getValue().booleanValue() 
@@ -125,7 +129,7 @@ public class OwnLayoutPane extends Pane
                 						&& !entry.getKey().equals(minEntry.get().getKey()))
                 				.map(entry -> 
                 					new BoundingBox(entry.getKey().getLayoutX(), entry.getKey().getLayoutY(), entry.getKey().getLayoutBounds().getWidth(), entry.getKey().getLayoutBounds().getHeight()))
-                			    .anyMatch(componentBounds -> layoutBounds.intersects(componentBounds)
+                			    .anyMatch(componentBounds -> futureBoundsBox.intersects(componentBounds)
                 			    );
                 		
                 		if(collides)
@@ -145,49 +149,7 @@ public class OwnLayoutPane extends Pane
             	}
             	while(!found);
             	
-            /*
-            
-            	//jetzt y_start ermitteln
-            	//dazu werden die Nodes benötigt die bereits hinzugefügt worden sind
-            	//TODO funktioniert nicht
-            	Optional<Map.Entry<Node, Boolean>> minEntry = map.entrySet().stream()
-            			.filter(predicate -> predicate.getKey().getLayoutY() == ySearch 
-            			&& predicate.getValue().booleanValue() 
-            			&& !notToCheck.contains(predicate.getKey()))
-            			.min(Comparator.comparing(predicate -> predicate.getKey().getBoundsInParent().getMaxY()));
-            			//.min(Comparator.comparing(predicate -> predicate.getKey().getBoundsInParent().getHeight()));
-            	//System.out.println("minEntry found? " + minEntry.isPresent());
-            	if(minEntry.isPresent())
-            	{
-            		//jetzt prüfen ob in der gleichen X-Achse noch weitere Objekte liegen
-            		y_start = minEntry.get().getKey().getLayoutY() + minEntry.get().getKey().getLayoutBounds().getHeight() + vGap + 1;
-            		x_start = minEntry.get().getKey().getLayoutX();
-            		
-            		//mit den Positionen prüfen ob  damit eine Node berührt wird
-            		BoundingBox layoutBounds =  new BoundingBox(x_start, y_start, nodeWidth, nodeHeight);
-            		
-            		boolean collides = map.entrySet().stream()
-            				.filter(entry -> entry.getValue().booleanValue() && !entry.getKey().equals(node))
-            				.map(entry -> 
-            					new BoundingBox(entry.getKey().getLayoutX(), entry.getKey().getLayoutY(), entry.getKey().getLayoutBounds().getWidth(), entry.getKey().getLayoutBounds().getHeight()))
-            			    .anyMatch(componentBounds -> layoutBounds.intersects(componentBounds)
-            			    );
-            		
-            		if(collides)
-            		{
-            			//gefunden node darf nicht verwendet werden.
-            			System.out.println(" collides " + collides);
-            			
-            		
-            		}
-            		
-            	
-            	}
-            //	System.out.println("y_start now " + y_start);
-            	
-            	//Prüfung ob mit der ermittelten Position eine anderes Layout berührt würde
-            	
-            	*/
+          
             }
             
             //hinzufügen
