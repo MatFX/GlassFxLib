@@ -435,4 +435,6 @@ public class MixedValueComponent extends AValueComponent
 	public SimpleObjectProperty<AColor_Component> getBottomValueProperty(){
 		return valueBottomProperty;
 	}
+
+	
 }

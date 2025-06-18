@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import eu.matfx.component.sensor.MixedValueComponent;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -112,16 +113,12 @@ public class OwnLayoutPane extends Pane
             		//minEntry vorhanden?
             		if(minEntry.isPresent())
                 	{
-                		//jetzt prüfen ob in der gleichen X-Achse noch weitere Objekte liegen
+            			//jetzt prüfen ob in der gleichen X-Achse noch weitere Objekte liegen
                 		y_start = minEntry.get().getKey().getLayoutY() + minEntry.get().getKey().getLayoutBounds().getHeight() + vGap + 1;
                 		x_start = minEntry.get().getKey().getLayoutX();
                 		
-                		
-                		
-                		
-                		
                 		//mit den Positionen prüfen ob  damit eine Node berührt wird
-                		BoundingBox futureBoundsBox =  new BoundingBox(x_start, y_start, nodeWidth+hGap+1, nodeHeight);
+                		BoundingBox futureBoundsBox =  new BoundingBox(x_start, y_start, nodeWidth + hGap + 1, nodeHeight);
                 		
                 		boolean collides = map.entrySet().stream()
                 				.filter(entry -> entry.getValue().booleanValue() 
@@ -151,27 +148,14 @@ public class OwnLayoutPane extends Pane
             	
           
             }
-            
+        	//System.out.println("MixedValueComponent " + ((MixedValueComponent)node).getValueProperty().get().getValue());
+        	
             //hinzufügen
             node.resizeRelocate(x_start, y_start, nodeWidth, nodeHeight);
             //Anschließend Ablage in bereits zugewiesen
             map.put(node, Boolean.valueOf(true));
             
-            
-            
-            
             x_start = x_start + nodeWidth + hGap +1;
-         //   System.out.println("x_start " + x_start);
-          
-            
-            
-            
-            
-            
-        	
-        	
-        	
-        	
         }
      }
 	
