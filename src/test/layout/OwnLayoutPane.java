@@ -1,6 +1,5 @@
 package test.layout;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -8,8 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import javafx.geometry.BoundingBox;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -71,9 +70,6 @@ public class OwnLayoutPane extends Pane
         map = this.getChildren().stream().collect(Collectors.toMap(child -> child, child -> false));
         neighborMap = this.getChildren().stream().collect(Collectors.toMap(child -> child, child -> getEmptyOrientationMap()));
         
-        System.out.println("map " + map);
-        System.out.println("neighborMap " + neighborMap);
-        
         //element holen und hinzufügen wenn es in die Breite passt
         
         //wenn nicht dann schauen ob es unter dem Elment passt dass am niedrigsten von der Höhe ist
@@ -84,9 +80,9 @@ public class OwnLayoutPane extends Pane
         double y_start = vGap+1;
         
         
-        for(Entry<Node, Boolean> entry : map.entrySet())
+        for(Entry<Node, Boolean> mapEntry : map.entrySet())
         {
-        	Node node = entry.getKey();
+        	Node node = mapEntry.getKey();
         	
         	double nodeWidth = node.prefWidth(-1);
             double nodeHeight = node.prefHeight(-1);
@@ -96,16 +92,9 @@ public class OwnLayoutPane extends Pane
             //new line if the node goes over the layout width
             if(tempLastPos > getWidth())
             {
-            	
-            	for(Entry<Node, Boolean> innerEntry : map.entrySet())
-            	{
-            		System.out.println("innerEntry " + innerEntry.getKey().getBoundsInParent());
-            		System.out.println("innerEntry " + innerEntry.getKey().getLayoutBounds());
-            	}
-            	
-            	
+
             	//wird benötigt wenn 
-            	List<Double> collsionXList = new ArrayList<Double>();
+            
             	final double ySearch = y_start;
             	//reset the x coord
             	x_start = hGap+1;
@@ -116,22 +105,29 @@ public class OwnLayoutPane extends Pane
             			.filter(predicate -> predicate.getKey().getLayoutY() == ySearch && predicate.getValue().booleanValue() && !predicate.getKey().equals(node))
             			.min(Comparator.comparing(predicate -> predicate.getKey().getBoundsInParent().getMaxY()));
             			//.min(Comparator.comparing(predicate -> predicate.getKey().getBoundsInParent().getHeight()));
-            	System.out.println("minEntry found? " + minEntry.isPresent());
+            	//System.out.println("minEntry found? " + minEntry.isPresent());
             	if(minEntry.isPresent())
             	{
             		//jetzt prüfen ob in der gleichen X-Achse noch weitere Objekte liegen
-            		
-            		
-            		
-            		
-            		
-            		System.out.println("minEntry " + minEntry.get().getKey().getBoundsInLocal());
-               		System.out.println("minEntry " + minEntry.get().getKey().getBoundsInParent());
-               		System.out.println("minEntry " + minEntry.get().getKey().getLayoutY());
             		y_start = minEntry.get().getKey().getLayoutY() + minEntry.get().getKey().getLayoutBounds().getHeight() + vGap + 1;
             		x_start = minEntry.get().getKey().getLayoutX();
+            		
+            		//mit den Positionen prüfen ob  damit eine Node berührt wird
+            		BoundingBox layoutBounds =  new BoundingBox(x_start, y_start, nodeWidth, nodeHeight);
+            		
+            		boolean collides = map.entrySet().stream()
+            				.filter(entry -> entry.getValue().booleanValue() && !entry.getKey().equals(node))
+            				.map(entry -> 
+            					new BoundingBox(entry.getKey().getLayoutX(), entry.getKey().getLayoutY(), entry.getKey().getLayoutBounds().getWidth(), entry.getKey().getLayoutBounds().getHeight()))
+            			    .anyMatch(componentBounds -> layoutBounds.intersects(componentBounds)
+            			    );
+            		
+            		if(collides)
+            			System.out.println(" collides " + collides);
+            		
+            	
             	}
-            	System.out.println("y_start now " + y_start);
+            //	System.out.println("y_start now " + y_start);
             	
             	//Prüfung ob mit der ermittelten Position eine anderes Layout berührt würde
             	
@@ -147,7 +143,7 @@ public class OwnLayoutPane extends Pane
             
             
             x_start = x_start + nodeWidth + hGap +1;
-            System.out.println("x_start " + x_start);
+         //   System.out.println("x_start " + x_start);
           
             
             
