@@ -12,8 +12,7 @@ public class ScrollJFXMasonryPane extends ScrollPane
 	{
 		super();
 	    this.setContent(masonryPane);
-	    this.setFitToWidth(true);  // passt die Breite an
-	    this.setPannable(true);    // erlaubt Ziehen mit Maus
+	    this.setId("scroll-jfxmasonrypane");
 	}
 	
 	public JFXMasonryPane getJFXMasonryPane()

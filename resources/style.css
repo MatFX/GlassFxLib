@@ -1,0 +1,14 @@
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+#scroll-jfxmasonrypane{
+	 -fx-background-color: transparent;
+}
+
+#scroll-jfxmasonrypane .viewport {
+    -fx-background-color: transparent;
+}

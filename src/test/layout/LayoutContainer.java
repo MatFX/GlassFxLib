@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import eu.matfx.component.layout.ScrollJFXMasonryPane;
 import eu.matfx.component.sensor.MixedValueComponent;
 import eu.matfx.tools.Value_Color_Component;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -19,30 +17,34 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import test.stuff.HelperClassBuildMap;
 import test.stuff.SensorValue;
 
-public class TestLayoutContainer2 extends Application
+public class LayoutContainer extends Application
 {
 	private HashMap<String, List<SensorValue>> sensorenMap = new HashMap<String, List<SensorValue>>();
 
-	private ScrollJFXMasonryPane masonryPane = new ScrollJFXMasonryPane();
+	private OwnLayoutPane layoutPane = new OwnLayoutPane();
 	
 	
 	public static void main(String[] args) {
         Application.launch(args);
 	}
-
+	
 	@Override
 	public void start(Stage primaryStage)
 	{
+		layoutPane.setStyle("-fx-background-color: #784545");
+	
+		
 		BorderPane borderPane = new BorderPane();
-		//borderPane.setStyle("-fx-background-color: #787845");
+		borderPane.setStyle("-fx-background-color: #787845");
 		
 		sensorenMap = HelperClassBuildMap.getBuildedMap();
 	
@@ -51,7 +53,7 @@ public class TestLayoutContainer2 extends Application
 		{
 			MixedValueComponent sensorPanel = new MixedValueComponent();
 			int prefWidth = rand.nextInt(71) + 80;
-			int prefHeight = rand.nextInt(70) + 120;
+			int prefHeight = rand.nextInt(70) + 100;
 			
 			sensorPanel.setPrefWidth(prefWidth);
 		    sensorPanel.setPrefHeight(prefHeight);
@@ -69,17 +71,22 @@ public class TestLayoutContainer2 extends Application
 						
 						DecimalFormat df = new DecimalFormat("0.0");
 						Value_Color_Component valueComponent = new Value_Color_Component(df.format(widthComponent) + " x " + df.format(heightComponent));
-						   valueComponent.setColor(Color.web("#669999"));
+						   valueComponent.setColor(Color.web("#d6d6c2"));
 						sensorPanel.getValueProperty().set(valueComponent);
 					}
 				}
 		    	
 		    });
-		    masonryPane.getJFXMasonryPane().getChildren().add(sensorPanel);
+	    
+		    layoutPane.getChildren().add(sensorPanel);
 		}
 		
-		masonryPane.setFitToWidth(true);
-		borderPane.setCenter(masonryPane);
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setFitToWidth(true);
+		
+		scrollPane.setContent(layoutPane);
+		
+		borderPane.setCenter(scrollPane);
 		
 		Scene scene = new Scene(borderPane, 800, 600);
 		scene.getStylesheets().add("style.css");
@@ -96,21 +103,16 @@ public class TestLayoutContainer2 extends Application
 			@Override
 			public void handle(ActionEvent p0) {
 				MixedValueComponent sensorPanel = new MixedValueComponent();
-				int prefWidth = rand.nextInt(71) + 80;
-				int prefHeight = rand.nextInt(70) + 100;
+				int prefWidth = rand.nextInt(71) + 100;
+				int prefHeight = rand.nextInt(70) + 150;
 				
 				sensorPanel.setPrefWidth(prefWidth);
 			    sensorPanel.setPrefHeight(prefHeight);
 			    sensorPanel.setMaxWidth(prefWidth);
 			    sensorPanel.setMinHeight(prefHeight);
-			    masonryPane.getJFXMasonryPane().getChildren().add(sensorPanel);
-				System.out.println("after add");
-			    //showBoundings( masonryPane.getChildren());
-				// Beim nächsten Layout-Zyklus wird die BoundingBox korrekt sein
-				Platform.runLater(() -> {
-				    Bounds b = sensorPanel.getBoundsInParent();
-				    System.out.println("Neue BoundingBox: " + b);
-				});
+			   
+			    layoutPane.getChildren().add(sensorPanel);
+				
 			}
 			
 		});
@@ -121,8 +123,6 @@ public class TestLayoutContainer2 extends Application
 	    vBoxBackgroundControl.setPadding(new Insets(5,5,5,5));
 	    vBoxBackgroundControl.getChildren().add(button);
 	    borderPane.setLeft(vBoxBackgroundControl);
-		
-		
 		
 	}
 
