@@ -1,9 +1,6 @@
 package test.layout;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import eu.matfx.component.sensor.MixedValueComponent;
@@ -20,18 +17,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import test.stuff.HelperClassBuildMap;
-import test.stuff.SensorValue;
 
 public class LayoutContainer extends Application
 {
 	private OwnLayoutPane layoutPane = new OwnLayoutPane();
 	
-	private final int SENSOR_COUNT_START = 7;
+	private final int SENSOR_COUNT_START = 5;
 	
 	public static void main(String[] args) {
         Application.launch(args);
