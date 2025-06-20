@@ -43,7 +43,7 @@ public class LayoutContainer extends Application
 	
 		for(int i = 0; i < SENSOR_COUNT_START; i++)
 		{
-		    layoutPane.getChildren().add(getBuildedMixedComponent());
+		    layoutPane.getChildren().add(getBuildedMixedComponent(i));
 		}
 		
 		ScrollPane scrollPane = new ScrollPane();
@@ -74,15 +74,36 @@ public class LayoutContainer extends Application
 
 		});
 		
+		Button removeButton = new Button("remove last UI Component");
+		removeButton.setOnAction(new EventHandler<ActionEvent> ()
+		{
+
+			@Override
+			public void handle(ActionEvent p0) {
+				
+			    layoutPane.getChildren().remove(layoutPane.getChildren().size()-1);
+				
+			}
+
+		});
+		
 		
 		
 		VBox vBoxBackgroundControl = new VBox(10);
 	    vBoxBackgroundControl.setPadding(new Insets(5,5,5,5));
-	    vBoxBackgroundControl.getChildren().add(button);
+	    vBoxBackgroundControl.getChildren().addAll(button, removeButton);
 	    borderPane.setLeft(vBoxBackgroundControl);
 		
 	}
 	
+	private Node getBuildedMixedComponent(int index)
+	{
+		MixedValueComponent sensorPanel = (MixedValueComponent) getBuildedMixedComponent();
+		Value_Color_Component valueComponent = new Value_Color_Component(""+index);
+		valueComponent.setColor(Color.web("#d6d6c2"));
+		sensorPanel.getTopValueProperty().set(valueComponent);
+		return sensorPanel;
+	}
 
 	private Node getBuildedMixedComponent() {
 		Random rand = new Random();

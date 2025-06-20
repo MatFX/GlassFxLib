@@ -144,12 +144,10 @@ public class OwnLayoutPane extends Pane
         
         double x_start = hGap+1;
         double y_start = vGap+1;
-        
-        
-        for(Entry<Node, GenericPair<Boolean, LayoutBox>> mapEntry : map.entrySet())
+        //Einbehaltung der Reihenfolge vom hinzufügen
+        for(Node node : this.getChildren())
         {
-        	Node node = mapEntry.getKey();
-        	System.out.println("node " + mapEntry.getValue().getRight());
+        	System.out.println("node " + node);
         	
         	
         	double nodeWidth = node.prefWidth(-1);
