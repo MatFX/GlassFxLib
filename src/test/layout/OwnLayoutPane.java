@@ -9,14 +9,36 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import eu.matfx.component.sensor.MixedValueComponent;
+import eu.matfx.tools.GenericPair;
+import eu.matfx.tools.LayoutBox;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
 public class OwnLayoutPane extends Pane
 {
+	
+	private double lastWidth = -1;
+	
+	private  Map<Node, GenericPair<Boolean, LayoutBox>> map = new HashMap<Node,  GenericPair<Boolean, LayoutBox>>();
+	
+	private enum ScalingDirection
+	{
+		No_Changing,
+		
+		Minimize,
+		
+		Maximize;
+		
+		
+		
+		
+	}
+	
 	public enum Direction
 	{
 		NORTH,
@@ -61,16 +83,57 @@ public class OwnLayoutPane extends Pane
 		
 	    if (getChildren().isEmpty()) return;
 
+	    ScalingDirection scalingDirection = ScalingDirection.No_Changing;
+	    //prüfun in welche Richtung es geht
+	    //von rechts nach links (verkleinerung)
+	    //von links nach rechts (vergößre)
+	    if(lastWidth != -1)
+	    {
+	    	if(lastWidth > totalWidth)
+	    		 scalingDirection = ScalingDirection.Minimize;
+	    	else if(lastWidth < totalWidth)
+	    		scalingDirection = ScalingDirection.Maximize;
+	    }
+	    lastWidth = totalWidth;
+    	//System.out.println("scalingDirection " + scalingDirection);
+	    
+	    this.getChildren().stream().forEach(node -> {
+	    	if(!map.containsKey(node))
+	    	{
+	    		LayoutBox layoutBox = new LayoutBox(node.getLayoutX(), node.getLayoutY(), node.getLayoutBounds().getWidth(), node.getLayoutBounds().getHeight());
+	            
+	    		layoutBox.layoutXProperty().bind(node.layoutXProperty());
+	    		layoutBox.layoutYProperty().bind(node.layoutYProperty());
+	    		node.layoutBoundsProperty().addListener(new ChangeListener<Bounds>(){
+
+					@Override
+					public void changed(ObservableValue<? extends Bounds> p0, Bounds p1, Bounds newBounds)
+					{
+						if(newBounds != null)
+						{
+							layoutBox.setWidth(newBounds.getWidth());
+							layoutBox.setHeight(newBounds.getHeight());
+						}
+						
+					}
+	    			
+	    		});
+	    		
+	    		map.put(node, new GenericPair<Boolean, LayoutBox>(false, layoutBox));
+	    		
+	    	}
+	    });
+	    
 	    
 	    
 
-        Map<Node, Boolean> map = new HashMap<Node, Boolean>();
+        
         
         Map<Node, HashMap<Direction, List<Node>>> neighborMap = new HashMap<Node, HashMap<Direction, List<Node>>>();
         
         //Muss eine Node die Nachbarn kennen?
         
-        map = this.getChildren().stream().collect(Collectors.toMap(child -> child, child -> false));
+        //map = this.getChildren().stream().collect(Collectors.toMap(child -> child, child -> new GenericPair<Boolean, BoundingBox>(false, null)));
         neighborMap = this.getChildren().stream().collect(Collectors.toMap(child -> child, child -> getEmptyOrientationMap()));
         
         //element holen und hinzufügen wenn es in die Breite passt
@@ -83,9 +146,11 @@ public class OwnLayoutPane extends Pane
         double y_start = vGap+1;
         
         
-        for(Entry<Node, Boolean> mapEntry : map.entrySet())
+        for(Entry<Node, GenericPair<Boolean, LayoutBox>> mapEntry : map.entrySet())
         {
         	Node node = mapEntry.getKey();
+        	System.out.println("node " + mapEntry.getValue().getRight());
+        	
         	
         	double nodeWidth = node.prefWidth(-1);
             double nodeHeight = node.prefHeight(-1);
@@ -105,8 +170,8 @@ public class OwnLayoutPane extends Pane
             	boolean found = false;
             	do
             	{
-            		Optional<Map.Entry<Node, Boolean>> minEntry = map.entrySet().stream()
-                			.filter(predicate -> predicate.getValue().booleanValue() 
+            		Optional<Map.Entry<Node, GenericPair<Boolean, LayoutBox>>> minEntry = map.entrySet().stream()
+                			.filter(predicate -> predicate.getValue().getLeft().booleanValue() 
                 			&& !notToCheck.contains(predicate.getKey()))
                 			.min(Comparator.comparing(predicate -> predicate.getKey().getBoundsInParent().getMaxY()));
             		
@@ -121,7 +186,7 @@ public class OwnLayoutPane extends Pane
                 		BoundingBox futureBoundsBox =  new BoundingBox(x_start, y_start, nodeWidth + hGap + 1, nodeHeight);
                 		
                 		boolean collides = map.entrySet().stream()
-                				.filter(entry -> entry.getValue().booleanValue() 
+                				.filter(entry -> entry.getValue().getLeft().booleanValue() 
                 						&& !entry.getKey().equals(node) 
                 						&& !entry.getKey().equals(minEntry.get().getKey()))
                 				.map(entry -> 
@@ -132,7 +197,7 @@ public class OwnLayoutPane extends Pane
                 		if(collides)
                 		{
                 			//gefunden node darf nicht verwendet werden.
-                			System.out.println("collides " + collides);
+                			//System.out.println("collides " + collides);
                 			notToCheck.add(minEntry.get().getKey());
                 		
                 		}
@@ -153,7 +218,8 @@ public class OwnLayoutPane extends Pane
             //hinzufügen
             node.resizeRelocate(x_start, y_start, nodeWidth, nodeHeight);
             //Anschließend Ablage in bereits zugewiesen
-            map.put(node, Boolean.valueOf(true));
+            
+            map.get(node).setLeft(Boolean.valueOf(true));
             
             x_start = x_start + nodeWidth + hGap +1;
         }
