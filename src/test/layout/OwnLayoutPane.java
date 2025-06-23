@@ -5,16 +5,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import eu.matfx.component.sensor.MixedValueComponent;
 import eu.matfx.tools.GenericPair;
 import eu.matfx.tools.LayoutBox;
+import eu.matfx.tools.LayoutBoxComparator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -25,7 +23,10 @@ public class OwnLayoutPane extends Pane
 	
 	private double lastWidth = -1;
 	
-	private  Map<Node, GenericPair<Boolean, LayoutBox>> map = new HashMap<Node,  GenericPair<Boolean, LayoutBox>>();
+	private Map<Node, GenericPair<Boolean, LayoutBox>> map = new HashMap<Node,  GenericPair<Boolean, LayoutBox>>();
+	
+	private List<GenericPair<Node, LayoutBox>> layoutList = new ArrayList<GenericPair<Node, LayoutBox>>();
+	
 	
 	private enum ScalingDirection
 	{
@@ -78,6 +79,7 @@ public class OwnLayoutPane extends Pane
 	@Override
     protected void layoutChildren() 
 	{
+		this.setWidth(500);
 		//for (int i = 0; i < 50; ++i) System.out.println();
 		//Breite wird benötigt um zu unterscheiden ob es in die nächste Zeile muss
 		double totalWidth = getWidth() - padding.getLeft() - padding.getRight();
@@ -121,7 +123,7 @@ public class OwnLayoutPane extends Pane
 	    		});
 
 	    		map.put(node, new GenericPair<Boolean, LayoutBox>(false, layoutBox));
-	    		System.out.println("Index " + ((MixedValueComponent)node).getTopValueProperty().get().getValue() +" >> " + map.get(node).getRight() + " on Pane? " + map.get(node).getLeft());
+	    		//System.out.println("Index " + ((MixedValueComponent)node).getTopValueProperty().get().getValue() +" >> " + map.get(node).getRight() + " on Pane? " + map.get(node).getLeft());
 	    	}
 	    	else
 	    	{
@@ -130,24 +132,75 @@ public class OwnLayoutPane extends Pane
 	    });
 	    System.out.println("w: "+ this.getWidth() +  " ------ h: " +this.getHeight()+"------------------------------------------------------------");
 	    
+	   
+	    /*
+	    System.out.println("? " + layoutList.size());
+	    for(GenericPair<Node, LayoutBox> genPair : layoutList)
+	    {
+	    	System.out.println("" + genPair.getRight().toString());
+	    }*/
 	    
-
+//	    double x_start = hGap + 1;
+//        double y_start = vGap + 1;
+        //Einbehaltung der Reihenfolge vom hinzufügen
+        for(Node node : this.getChildren())
+        {
+        	if(!map.get(node).getLeft().booleanValue())
+         	{
+        		//Die Node war bisher noch nicht auf der Map
+        		double x_start = hGap + 1;
+        	    double y_start = vGap + 1;
+        	    double nodeWidth = node.prefWidth(-1);
+                double nodeHeight = node.prefHeight(-1);
+        		
+                
+                
+              //GenericPair<Double, Double> calculatedCoordinates = getCalculatedCoordinates(x_start, y_start, nodeWidth, nodeHeight);
+                
+                
+        	    for(GenericPair<Node, LayoutBox> genNodelayout : layoutList)
+        	    {
+        	    	double temp_x = genNodelayout.getRight().getLayoutX();
+        	    	double temp_y = genNodelayout.getRight().getLayoutY();
+        	    	
+        	    	
+        	    	//x hinzufügen und anschließend prüfen ob 
+        	    	x_start = temp_x + genNodelayout.getRight().getWidth() + hGap + 1;
+        	    	System.out.println("this.getWidth() " + this.getWidth());
+        	      	System.out.println("(x_start + map.get(node).getRight().getWidth() + hGap + 1) " + (x_start + map.get(node).getRight().getWidth() + hGap + 1));
+        	    	if((x_start + nodeWidth + hGap + 1) > getWidth())
+        	    	{
+        	    		
+        	    		
+        	    		//dann nächste zeile bzw. freie Position suchen
+        	    		System.out.println("müsste doch breiter sein");
+        	    		y_start = temp_y + genNodelayout.getRight().getHeight() + vGap + 1;
+        	    		x_start = hGap + 1;
+        	    		
+        	    		
+        	    	
+        	    	
+        	    	}
+        	    		
+        	    	
+        	    	//y_start = temp_y + genNodelayout.getRight().getHeight() + vGap + 1;
+        	    	
+        	    	
+        	    	
+        	    }
+        	    node.resizeRelocate(x_start, y_start, nodeWidth, nodeHeight);
+        	    map.get(node).setLeft(Boolean.valueOf(true));
+        	    
+        	    layoutList.add(new GenericPair<Node, LayoutBox>(node,  map.get(node).getRight()));
+        	    layoutList.sort(Comparator.comparing(GenericPair::getRight, LayoutBoxComparator.getInstance()));
+        	    
+        	}
+        	
+        	
+        	
+        }
         
-        
-        Map<Node, HashMap<Direction, List<Node>>> neighborMap = new HashMap<Node, HashMap<Direction, List<Node>>>();
-        
-        //Muss eine Node die Nachbarn kennen?
-        
-        neighborMap = this.getChildren().stream().collect(Collectors.toMap(child -> child, child -> getEmptyOrientationMap()));
-        
-        //element holen und hinzufügen wenn es in die Breite passt
-        
-        //wenn nicht dann schauen ob es unter dem Elment passt dass am niedrigsten von der Höhe ist
-        
-       
-        
-        double x_start = hGap + 1;
-        double y_start = vGap + 1;
+       /*
         //Einbehaltung der Reihenfolge vom hinzufügen
         for(Node node : this.getChildren())
         {
@@ -168,8 +221,11 @@ public class OwnLayoutPane extends Pane
         	}
             else
             {
+            	
+            	
+            	
+            	
 
-            	/*
                 System.out.println("nodeWidth " + nodeWidth);
                 System.out.println("x  " + node.getLayoutX());
                // double tempLastPos =  x_start + nodeWidth + hGap + 1;
@@ -241,16 +297,58 @@ public class OwnLayoutPane extends Pane
                 map.get(node).setLeft(Boolean.valueOf(true));
                 
                 x_start = x_start + nodeWidth + hGap +1;
-            	*/
+            	
             }
         	
         	
         	
         	
-        }
+        }*/
      }
 	
-	 @Override
+	 private GenericPair<Double, Double> getCalculatedCoordinates(double x_start, double y_start, double nodeWidth, double nodeHeight) 
+	 {
+		 GenericPair<Double, Double> returnValue = new GenericPair<Double, Double>(x_start, y_start);
+		 
+		 for(GenericPair<Node, LayoutBox> genNodeLayout : layoutList)
+		 {
+			 if(genNodeLayout.getRight().getLayoutY() == y_start)
+			 {
+				double temp_x = genNodeLayout.getRight().getLayoutX();
+     	    	//double temp_y = genNodeLayout.getRight().getLayoutY();
+
+    	    	//x hinzufügen und anschließend prüfen ob 
+    	    	x_start = temp_x + genNodeLayout.getRight().getWidth() + hGap + 1;
+    	    	returnValue.setLeft(x_start);
+    	    	if((x_start + nodeWidth + hGap + 1) > getWidth())
+    	    	{
+    	    		//Ende wurde erreicht, dass bedeutet es wird das kleinste Element benötigt von y_start
+    	    		GenericPair<Node, LayoutBox> lowestHeightLayoutBox = getLowestHeightLayoutBox(y_start);
+    	    		
+    	    		y_start = lowestHeightLayoutBox.getRight().getLayoutX() + lowestHeightLayoutBox.getRight().getHeight() + vGap + 1;
+    	    		returnValue.setLeft(y_start);
+    	    		break;
+    	    	}
+    	    	else
+    	    		break;
+    	    }
+		}
+		return returnValue;
+	}
+
+	private GenericPair<Node, LayoutBox> getLowestHeightLayoutBox(double targetY) 
+	{
+		Optional<GenericPair<Node, LayoutBox>> minHeightElement = layoutList.stream()
+			    .filter(pair -> pair.getRight().getLayoutY() == targetY)
+			    .min(Comparator.comparingDouble(pair -> pair.getRight().getHeight()));
+
+		if (minHeightElement.isPresent()) {
+			return minHeightElement.get();
+		}
+		return null;
+	}
+
+	@Override
 	 protected double computePrefWidth(double height) {
 			System.out.println("aufruf computePrefWidth ");
 	        // Berechne maximale Zeilenbreite

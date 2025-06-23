@@ -68,7 +68,7 @@ public class LayoutContainer extends Application
 			@Override
 			public void handle(ActionEvent p0) {
 				
-			    layoutPane.getChildren().add(getBuildedMixedComponent());
+			    layoutPane.getChildren().add(getBuildedMixedComponent(layoutPane.getChildren().size()));
 				
 			}
 
