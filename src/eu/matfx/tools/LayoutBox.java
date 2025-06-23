@@ -1,5 +1,7 @@
 package eu.matfx.tools;
 
+import java.util.Comparator;
+
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.BoundingBox;
 
@@ -8,7 +10,7 @@ import javafx.geometry.BoundingBox;
  * @author m.goerlich
  *
  */
-public class LayoutBox 
+public class LayoutBox
 {
 
 	
@@ -93,5 +95,6 @@ public class LayoutBox
 	{
 		return new BoundingBox(this.layoutXProperty.get(), this.layoutYProperty.get(), this.widthProperty.get(), this.heightProperty.get());
 	}
+
 
 }

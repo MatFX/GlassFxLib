@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import eu.matfx.component.sensor.MixedValueComponent;
 import eu.matfx.tools.GenericPair;
 import eu.matfx.tools.LayoutBox;
 import javafx.beans.value.ChangeListener;
@@ -95,7 +96,7 @@ public class OwnLayoutPane extends Pane
 	    		scalingDirection = ScalingDirection.Maximize;
 	    }
 	    lastWidth = totalWidth;
-    	//System.out.println("scalingDirection " + scalingDirection);
+    	System.out.println("scalingDirection " + scalingDirection);
 	    
 	    this.getChildren().stream().forEach(node -> {
 	    	if(!map.containsKey(node))
@@ -118,12 +119,16 @@ public class OwnLayoutPane extends Pane
 					}
 	    			
 	    		});
-	    		
+
 	    		map.put(node, new GenericPair<Boolean, LayoutBox>(false, layoutBox));
-	    		
+	    		System.out.println("Index " + ((MixedValueComponent)node).getTopValueProperty().get().getValue() +" >> " + map.get(node).getRight() + " on Pane? " + map.get(node).getLeft());
+	    	}
+	    	else
+	    	{
+	    		System.out.println("Index " + ((MixedValueComponent)node).getTopValueProperty().get().getValue() +" >> " + map.get(node).getRight() + " on Pane? " + map.get(node).getLeft());
 	    	}
 	    });
-	    
+	    System.out.println("w: "+ this.getWidth() +  " ------ h: " +this.getHeight()+"------------------------------------------------------------");
 	    
 	    
 
@@ -133,93 +138,115 @@ public class OwnLayoutPane extends Pane
         
         //Muss eine Node die Nachbarn kennen?
         
-        //map = this.getChildren().stream().collect(Collectors.toMap(child -> child, child -> new GenericPair<Boolean, BoundingBox>(false, null)));
         neighborMap = this.getChildren().stream().collect(Collectors.toMap(child -> child, child -> getEmptyOrientationMap()));
         
         //element holen und hinzufügen wenn es in die Breite passt
         
         //wenn nicht dann schauen ob es unter dem Elment passt dass am niedrigsten von der Höhe ist
         
-        //vermutlich muss ich die Nachbarn kennen oder`?
+       
         
-        double x_start = hGap+1;
-        double y_start = vGap+1;
+        double x_start = hGap + 1;
+        double y_start = vGap + 1;
         //Einbehaltung der Reihenfolge vom hinzufügen
         for(Node node : this.getChildren())
         {
-        	System.out.println("node " + node);
-        	
-        	
         	double nodeWidth = node.prefWidth(-1);
             double nodeHeight = node.prefHeight(-1);
-           
-            
-            double tempLastPos = x_start + nodeWidth + hGap + 1;
-            //new line if the node goes over the layout width
-            if(tempLastPos > getWidth())
-            {
-            	//Nodes are not to check...starts with own
-            	List<Node> notToCheck = new ArrayList<Node>();
-            	notToCheck.add(node);
-            	final double ySearch = y_start;
-            	//reset the x coord
-            	x_start = hGap+1;
+        	
+            //
+            if(!map.get(node).getLeft().booleanValue())
+        	{
             	
-            	boolean found = false;
-            	do
-            	{
-            		Optional<Map.Entry<Node, GenericPair<Boolean, LayoutBox>>> minEntry = map.entrySet().stream()
-                			.filter(predicate -> predicate.getValue().getLeft().booleanValue() 
-                			&& !notToCheck.contains(predicate.getKey()))
-                			.min(Comparator.comparing(predicate -> predicate.getKey().getBoundsInParent().getMaxY()));
-            		
-            		//minEntry vorhanden?
-            		if(minEntry.isPresent())
+        	
+        		 //hinzufügen
+                 node.resizeRelocate(x_start, y_start, nodeWidth, nodeHeight);
+                 //Anschließend Ablage in bereits zugewiesen
+            	 x_start = x_start + nodeWidth + hGap + 1;
+                 map.get(node).setLeft(Boolean.valueOf(true));
+        		 continue;
+        	}
+            else
+            {
+
+            	/*
+                System.out.println("nodeWidth " + nodeWidth);
+                System.out.println("x  " + node.getLayoutX());
+               // double tempLastPos =  x_start + nodeWidth + hGap + 1;
+                
+                
+                double tempLastPos = x_start + nodeWidth + hGap + 1;
+                //new line if the node goes over the layout width
+                if(tempLastPos > getWidth())
+                {
+                	//Nodes are not to check...starts with own
+                	List<Node> notToCheck = new ArrayList<Node>();
+                	notToCheck.add(node);
+                	final double ySearch = y_start;
+                	//reset the x coord
+                	x_start = hGap+1;
+                	
+                	boolean found = false;
+                	do
                 	{
-            			//jetzt prüfen ob in der gleichen X-Achse noch weitere Objekte liegen
-                		y_start = minEntry.get().getKey().getLayoutY() + minEntry.get().getKey().getLayoutBounds().getHeight() + vGap + 1;
-                		x_start = minEntry.get().getKey().getLayoutX();
+                		Optional<Map.Entry<Node, GenericPair<Boolean, LayoutBox>>> minEntry = map.entrySet().stream()
+                    			.filter(predicate -> predicate.getValue().getLeft().booleanValue() 
+                    			&& !notToCheck.contains(predicate.getKey()))
+                    			.min(Comparator.comparing(predicate -> predicate.getKey().getBoundsInParent().getMaxY()));
                 		
-                		//mit den Positionen prüfen ob  damit eine Node berührt wird
-                		BoundingBox futureBoundsBox =  new BoundingBox(x_start, y_start, nodeWidth + hGap + 1, nodeHeight);
-                		
-                		boolean collides = map.entrySet().stream()
-                				.filter(entry -> entry.getValue().getLeft().booleanValue() 
-                						&& !entry.getKey().equals(node) 
-                						&& !entry.getKey().equals(minEntry.get().getKey()))
-                				.map(entry -> 
-                					new BoundingBox(entry.getKey().getLayoutX(), entry.getKey().getLayoutY(), entry.getKey().getLayoutBounds().getWidth(), entry.getKey().getLayoutBounds().getHeight()))
-                			    .anyMatch(componentBounds -> futureBoundsBox.intersects(componentBounds)
-                			    );
-                		
-                		if(collides)
-                		{
-                			//gefunden node darf nicht verwendet werden.
-                			//System.out.println("collides " + collides);
-                			notToCheck.add(minEntry.get().getKey());
-                		
-                		}
+                		//minEntry vorhanden?
+                		if(minEntry.isPresent())
+                    	{
+                			//jetzt prüfen ob in der gleichen X-Achse noch weitere Objekte liegen
+                    		y_start = minEntry.get().getKey().getLayoutY() + minEntry.get().getKey().getLayoutBounds().getHeight() + vGap + 1;
+                    		x_start = minEntry.get().getKey().getLayoutX();
+                    		
+                    		//mit den Positionen prüfen ob  damit eine Node berührt wird
+                    		BoundingBox futureBoundsBox =  new BoundingBox(x_start, y_start, nodeWidth + hGap + 1, nodeHeight);
+                    		
+                    		boolean collides = map.entrySet().stream()
+                    				.filter(entry -> entry.getValue().getLeft().booleanValue() 
+                    						&& !entry.getKey().equals(node) 
+                    						&& !entry.getKey().equals(minEntry.get().getKey()))
+                    				.map(entry -> 
+                    					new BoundingBox(entry.getKey().getLayoutX(), entry.getKey().getLayoutY(), entry.getKey().getLayoutBounds().getWidth(), entry.getKey().getLayoutBounds().getHeight()))
+                    			    .anyMatch(componentBounds -> futureBoundsBox.intersects(componentBounds)
+                    			    );
+                    		
+                    		if(collides)
+                    		{
+                    			//gefunden node darf nicht verwendet werden.
+                    			//System.out.println("collides " + collides);
+                    			notToCheck.add(minEntry.get().getKey());
+                    		
+                    		}
+                    		else
+                    			found = true;
+                    	
+                    	}
                 		else
                 			found = true;
-                	
+                		
                 	}
-            		else
-            			found = true;
-            		
-            	}
-            	while(!found);
+                	while(!found);
+                	
+              
+                }
+            	//System.out.println("MixedValueComponent " + ((MixedValueComponent)node).getValueProperty().get().getValue());
             	
-          
+                //hinzufügen
+                node.resizeRelocate(x_start, y_start, nodeWidth, nodeHeight);
+                //Anschließend Ablage in bereits zugewiesen
+                
+                map.get(node).setLeft(Boolean.valueOf(true));
+                
+                x_start = x_start + nodeWidth + hGap +1;
+            	*/
             }
-        	//System.out.println("MixedValueComponent " + ((MixedValueComponent)node).getValueProperty().get().getValue());
         	
-            //hinzufügen
-            node.resizeRelocate(x_start, y_start, nodeWidth, nodeHeight);
-            //Anschließend Ablage in bereits zugewiesen
-            
-            map.get(node).setLeft(Boolean.valueOf(true));
-            
-            x_start = x_start + nodeWidth + hGap +1;
+        	
+        	
+        	
         }
      }
 	
