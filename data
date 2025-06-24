@@ -1,0 +1,5 @@
+layoutPane.getChildren().add(getBuildedMixedComponent(0, 110, 128));
+layoutPane.getChildren().add(getBuildedMixedComponent(1, 98, 127));
+layoutPane.getChildren().add(getBuildedMixedComponent(2, 80, 131));
+layoutPane.getChildren().add(getBuildedMixedComponent(3, 121, 153));
+layoutPane.getChildren().add(getBuildedMixedComponent(4, 129, 122));

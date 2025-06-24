@@ -1,9 +1,17 @@
 package test.layout;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.Random;
 
 import eu.matfx.component.sensor.MixedValueComponent;
+import eu.matfx.tools.LayoutBox;
+import eu.matfx.tools.UIToolBox;
 import eu.matfx.tools.Value_Color_Component;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -40,18 +48,20 @@ public class LayoutContainer extends Application
 		BorderPane borderPane = new BorderPane();
 		borderPane.setStyle("-fx-background-color: #787845");
 
-		/*
-		layoutPane.getChildren().add(getBuildedMixedComponent(0, 128, 156));
-		layoutPane.getChildren().add(getBuildedMixedComponent(1, 132, 110));
-		layoutPane.getChildren().add(getBuildedMixedComponent(2, 109, 150));
-		layoutPane.getChildren().add(getBuildedMixedComponent(3, 93, 109));
-		layoutPane.getChildren().add(getBuildedMixedComponent(4, 124, 156)); 
-		*/
-		
-		for(int i = 0; i < SENSOR_COUNT_START; i++)
+		layoutPane.getChildren().add(getBuildedMixedComponent(0, 110, 128));
+		layoutPane.getChildren().add(getBuildedMixedComponent(1, 98, 127));
+		layoutPane.getChildren().add(getBuildedMixedComponent(2, 80, 131));
+		layoutPane.getChildren().add(getBuildedMixedComponent(3, 121, 153));
+		layoutPane.getChildren().add(getBuildedMixedComponent(4, 129, 122));
+
+		if(layoutPane.getChildren().size() == 0)
 		{
-		    layoutPane.getChildren().add(getBuildedMixedComponent(i));
+			for(int i = 0; i < SENSOR_COUNT_START; i++)
+			{
+			    layoutPane.getChildren().add(getBuildedMixedComponent(i));
+			}
 		}
+		
 		
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setFitToWidth(true);
@@ -94,11 +104,49 @@ public class LayoutContainer extends Application
 
 		});
 		
+		Button saveNodes = new Button("save Coordinates from Nodes");
+		saveNodes.setOnAction(new EventHandler<ActionEvent> ()
+		{
+
+			@Override
+			public void handle(ActionEvent p0) {
+				
+				File file = new File("savedNodes.txt");
+				
+				 try (  PrintWriter pw = new PrintWriter( new DataOutputStream(new FileOutputStream(new File("data"))));)
+				 {
+					 for(Node node : layoutPane.getChildren())
+					 {
+						 MixedValueComponent mixedValueComponent = (MixedValueComponent)node;
+						 
+						 LayoutBox layoutBox = layoutPane.getLayoutBox(node);
+						 pw.append("layoutPane.getChildren().add(getBuildedMixedComponent(");
+						 pw.append(""+mixedValueComponent.getTopValueProperty().get().getValue()+", ");
+						 pw.append(""+Math.round(layoutBox.getWidth())+", "); 
+						 pw.append(""+Math.round(layoutBox.getHeight())+"));");
+						 pw.append("\n");
+					 }
+					 pw.close();
+				 } 
+				 catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				 } 
+				 catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				 }
+				
+				
+				
+			}
+
+		});
 		
 		
 		VBox vBoxBackgroundControl = new VBox(10);
 	    vBoxBackgroundControl.setPadding(new Insets(5,5,5,5));
-	    vBoxBackgroundControl.getChildren().addAll(button, removeButton);
+	    vBoxBackgroundControl.getChildren().addAll(button, removeButton, UIToolBox.createVerticalSpacer(), saveNodes);
 	    borderPane.setLeft(vBoxBackgroundControl);
 		
 	}
@@ -138,6 +186,7 @@ public class LayoutContainer extends Application
 				
 				if(!newBounds.isEmpty())
 				{
+					System.out.println("newBounds " + newBounds);
 					double widthComponent = Math.round(newBounds.getWidth() * 10.0) / 10.0;
 					double heightComponent = Math.round(newBounds.getHeight()* 10.0) / 10.0;
 					

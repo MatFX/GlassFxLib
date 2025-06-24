@@ -364,6 +364,10 @@ public class OwnLayoutPane extends Pane
         y += maxRowHeight + padding.getBottom();
         return y;
     }
+
+	public LayoutBox getLayoutBox(Node node) {
+		return map.get(node).getRight();
+	}
     
 }
 
