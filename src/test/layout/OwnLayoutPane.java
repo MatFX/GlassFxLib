@@ -132,17 +132,7 @@ public class OwnLayoutPane extends Pane
 	    });
 	    System.out.println("w: "+ this.getWidth() +  " ------ h: " +this.getHeight()+"------------------------------------------------------------");
 	    
-	   
-	    /*
-	    System.out.println("? " + layoutList.size());
-	    for(GenericPair<Node, LayoutBox> genPair : layoutList)
-	    {
-	    	System.out.println("" + genPair.getRight().toString());
-	    }*/
-	    
-//	    double x_start = hGap + 1;
-//        double y_start = vGap + 1;
-        //Einbehaltung der Reihenfolge vom hinzufügen
+	    //Einbehaltung der Reihenfolge vom hinzufügen
         for(Node node : this.getChildren())
         {
         	if(!map.get(node).getLeft().booleanValue())
@@ -152,12 +142,7 @@ public class OwnLayoutPane extends Pane
         	    double y_start = vGap + 1;
         	    double nodeWidth = node.prefWidth(-1);
                 double nodeHeight = node.prefHeight(-1);
-        		
-                
-                
-              //GenericPair<Double, Double> calculatedCoordinates = getCalculatedCoordinates(x_start, y_start, nodeWidth, nodeHeight);
-                
-                
+               
         	    for(GenericPair<Node, LayoutBox> genNodelayout : layoutList)
         	    {
         	    	double temp_x = genNodelayout.getRight().getLayoutX();
@@ -166,27 +151,22 @@ public class OwnLayoutPane extends Pane
         	    	
         	    	//x hinzufügen und anschließend prüfen ob 
         	    	x_start = temp_x + genNodelayout.getRight().getWidth() + hGap + 1;
-        	    	System.out.println("this.getWidth() " + this.getWidth());
-        	      	System.out.println("(x_start + map.get(node).getRight().getWidth() + hGap + 1) " + (x_start + map.get(node).getRight().getWidth() + hGap + 1));
+       
         	    	if((x_start + nodeWidth + hGap + 1) > getWidth())
         	    	{
+        	    		//wenn breite erreicht, dann prüfen wo das nächst mögliche freie Feld ist
+        	    		GenericPair<Node, LayoutBox> smallestHeightBox = this.getLowestHeightLayoutBox(temp_y, nodeWidth, nodeHeight);
+        	    		if(smallestHeightBox == null)
+        	    		{
+        	    			
+        	    		}
+        	    		else
+        	    		{
+        	    			x_start = smallestHeightBox.getRight().getBoundingBox().getMinX();
+            	    		y_start = smallestHeightBox.getRight().getBoundingBox().getMaxY() + vGap + 1;
+        	    		}
         	    		
-        	    		
-        	    		//dann nächste zeile bzw. freie Position suchen
-        	    		System.out.println("müsste doch breiter sein");
-        	    		y_start = temp_y + genNodelayout.getRight().getHeight() + vGap + 1;
-        	    		x_start = hGap + 1;
-        	    		
-        	    		
-        	    	
-        	    	
         	    	}
-        	    		
-        	    	
-        	    	//y_start = temp_y + genNodelayout.getRight().getHeight() + vGap + 1;
-        	    	
-        	    	
-        	    	
         	    }
         	    node.resizeRelocate(x_start, y_start, nodeWidth, nodeHeight);
         	    map.get(node).setLeft(Boolean.valueOf(true));
@@ -306,52 +286,52 @@ public class OwnLayoutPane extends Pane
         }*/
      }
 	
-	 private GenericPair<Double, Double> getCalculatedCoordinates(double x_start, double y_start, double nodeWidth, double nodeHeight) 
-	 {
-		 GenericPair<Double, Double> returnValue = new GenericPair<Double, Double>(x_start, y_start);
-		 
-		 for(GenericPair<Node, LayoutBox> genNodeLayout : layoutList)
-		 {
-			 if(genNodeLayout.getRight().getLayoutY() == y_start)
-			 {
-				double temp_x = genNodeLayout.getRight().getLayoutX();
-     	    	//double temp_y = genNodeLayout.getRight().getLayoutY();
+	
 
-    	    	//x hinzufügen und anschließend prüfen ob 
-    	    	x_start = temp_x + genNodeLayout.getRight().getWidth() + hGap + 1;
-    	    	returnValue.setLeft(x_start);
-    	    	if((x_start + nodeWidth + hGap + 1) > getWidth())
-    	    	{
-    	    		//Ende wurde erreicht, dass bedeutet es wird das kleinste Element benötigt von y_start
-    	    		GenericPair<Node, LayoutBox> lowestHeightLayoutBox = getLowestHeightLayoutBox(y_start);
-    	    		
-    	    		y_start = lowestHeightLayoutBox.getRight().getLayoutX() + lowestHeightLayoutBox.getRight().getHeight() + vGap + 1;
-    	    		returnValue.setLeft(y_start);
-    	    		break;
-    	    	}
-    	    	else
-    	    		break;
-    	    }
+	private boolean isCollision(double x_start, double y_start, double maxW, double maxH) {
+		LayoutBox checkBox = new LayoutBox(x_start, y_start, maxW, maxH);
+		
+		for(GenericPair<Node, LayoutBox> genNodelayout : layoutList)
+		{
+			if(genNodelayout.getRight().getBoundingBox().intersects(checkBox.getBoundingBox()))
+				return true;
+			
 		}
-		return returnValue;
+		return false;
 	}
 
-	private GenericPair<Node, LayoutBox> getLowestHeightLayoutBox(double targetY) 
-	{
-		Optional<GenericPair<Node, LayoutBox>> minHeightElement = layoutList.stream()
-			    .filter(pair -> pair.getRight().getLayoutY() == targetY)
-			    .min(Comparator.comparingDouble(pair -> pair.getRight().getHeight()));
+	
 
-		if (minHeightElement.isPresent()) {
-			return minHeightElement.get();
+	private GenericPair<Node, LayoutBox> getLowestHeightLayoutBox(double targetY, double nodeWidth, double nodeHeight) 
+	{
+		for(GenericPair<Node, LayoutBox> element : layoutList)
+		{
+			if(element.getRight().getLayoutY() == targetY)
+			{
+				double element_start_y = element.getRight().getBoundingBox().getMaxY() + vGap + 1;
+	    		double element_start_x = element.getRight().getBoundingBox().getMinX();
+				
+	    		double maxW = nodeWidth + hGap + 1;
+	    		double maxH = nodeHeight + vGap + 1;
+	    		
+	    		if(!isCollision(element_start_x, element_start_y, maxW, maxH))
+	    		{
+	    			//Gefunden
+	    			return element;
+	    			
+	    		}
+	    		
+			}
+			
+			
 		}
 		return null;
 	}
 
+	
 	@Override
-	 protected double computePrefWidth(double height) {
-			System.out.println("aufruf computePrefWidth ");
-	        // Berechne maximale Zeilenbreite
+	protected double computePrefWidth(double height) {
+			// Berechne maximale Zeilenbreite
 	        double maxWidth = 0;
 	        double x = padding.getLeft() + padding.getRight();
 	
@@ -363,12 +343,11 @@ public class OwnLayoutPane extends Pane
 	            x += cw;
 	        }
 	        return maxWidth;
-	    }
+	}
 
     @Override
     protected double computePrefHeight(double width) {
-    	System.out.println("aufruf computePrefHeight ");
-        // Berechne benötigte Höhe basierend auf Umbrüchen
+    	// Berechne benötigte Höhe basierend auf Umbrüchen
         double x = padding.getLeft();
         double y = padding.getTop();
         double maxRowHeight = 0;
