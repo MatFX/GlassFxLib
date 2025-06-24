@@ -13,8 +13,10 @@ import eu.matfx.tools.LayoutBox;
 import eu.matfx.tools.LayoutBoxComparator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
@@ -76,10 +78,47 @@ public class OwnLayoutPane extends Pane
 	{
 		return new HashMap<Direction, List<Node>>();
 	}
+	
+	private Point2D findFreeSpot(
+		    Map<Node, GenericPair<Boolean, LayoutBox>> layoutMap,
+		    Node current,
+		    double width,
+		    double height,
+		    double maxWidth
+		) {
+		    for (double y = padding.getTop(); ; y += 5) {
+		        for (double x = padding.getLeft(); x <= maxWidth - width; x += 5) {
+		            // Box mit zusätzlichem Gap außenrum
+		            BoundingBox testBox = new BoundingBox(
+		                x - hGap / 2.0,
+		                y - vGap / 2.0,
+		                width + hGap,
+		                height + vGap
+		            );
+
+		            boolean fits = layoutMap.entrySet().stream()
+		                .filter(e -> e.getValue().getLeft() && !e.getKey().equals(current))
+		                .map(e -> {
+		                    Node n = e.getKey();
+		                    return new BoundingBox(
+		                        n.getLayoutX() - hGap / 2.0,
+		                        n.getLayoutY() - vGap / 2.0,
+		                        n.getLayoutBounds().getWidth() + hGap,
+		                        n.getLayoutBounds().getHeight() + vGap
+		                    );
+		                })
+		                .noneMatch(box -> box.intersects(testBox));
+
+		            if (fits) return new Point2D(x, y);
+		        }
+		    }
+		}
+	
+	
 	@Override
     protected void layoutChildren() 
 	{
-		this.setWidth(500);
+		//this.setWidth(500);
 		//for (int i = 0; i < 50; ++i) System.out.println();
 		//Breite wird benötigt um zu unterscheiden ob es in die nächste Zeile muss
 		double totalWidth = getWidth() - padding.getLeft() - padding.getRight();
@@ -123,98 +162,55 @@ public class OwnLayoutPane extends Pane
 	    		});
 
 	    		map.put(node, new GenericPair<Boolean, LayoutBox>(false, layoutBox));
-	    		//System.out.println("Index " + ((MixedValueComponent)node).getTopValueProperty().get().getValue() +" >> " + map.get(node).getRight() + " on Pane? " + map.get(node).getLeft());
 	    	}
 	    	else
 	    	{
 	    		System.out.println("Index " + ((MixedValueComponent)node).getTopValueProperty().get().getValue() +" >> " + map.get(node).getRight() + " on Pane? " + map.get(node).getLeft());
 	    	}
 	    });
-	    System.out.println("w: "+ this.getWidth() +  " ------ h: " +this.getHeight()+"------------------------------------------------------------");
+	    System.out.println("w: "+ totalWidth +  " ------ h: " +this.getHeight()+"------------------------------------------------------------");
 	    
-	    //Einbehaltung der Reihenfolge vom hinzufügen
-        for(Node node : this.getChildren())
-        {
-        	if(!map.get(node).getLeft().booleanValue())
-         	{
-        		//Die Node war bisher noch nicht auf der Map
-        		double x_start = hGap + 1;
-        	    double y_start = vGap + 1;
-        	    double nodeWidth = node.prefWidth(-1);
-                double nodeHeight = node.prefHeight(-1);
-               
-        	    for(GenericPair<Node, LayoutBox> genNodelayout : layoutList)
-        	    {
-        	    	double temp_x = genNodelayout.getRight().getLayoutX();
-        	    	double temp_y = genNodelayout.getRight().getLayoutY();
-        	    	
-        	    	
-        	    	//x hinzufügen und anschließend prüfen ob 
-        	    	x_start = temp_x + genNodelayout.getRight().getWidth() + hGap + 1;
-       
-        	    	if((x_start + nodeWidth + hGap + 1) > getWidth())
-        	    	{
-        	    		//wenn breite erreicht, dann prüfen wo das nächst mögliche freie Feld ist
-        	    		GenericPair<Node, LayoutBox> smallestHeightBox = this.getLowestHeightLayoutBox(temp_y, nodeWidth, nodeHeight);
-        	    		if(smallestHeightBox == null)
-        	    		{
-        	    			
-        	    		}
-        	    		else
-        	    		{
-        	    			x_start = smallestHeightBox.getRight().getBoundingBox().getMinX();
-            	    		y_start = smallestHeightBox.getRight().getBoundingBox().getMaxY() + vGap + 1;
-        	    		}
-        	    		
-        	    	}
-        	    }
-        	    node.resizeRelocate(x_start, y_start, nodeWidth, nodeHeight);
-        	    map.get(node).setLeft(Boolean.valueOf(true));
-        	    
-        	    layoutList.add(new GenericPair<Node, LayoutBox>(node,  map.get(node).getRight()));
-        	    layoutList.sort(Comparator.comparing(GenericPair::getRight, LayoutBoxComparator.getInstance()));
-        	    
-        	}
-        	
-        	
-        	
-        }
-        
-       /*
+		double x_start = hGap + 1;
+	    double y_start = vGap + 1;
+	    
+        /*
+	    for (Node node : this.getChildren()) {
+	        double nodeWidth = node.prefWidth(-1);
+	        double nodeHeight = node.prefHeight(-1);
+
+	        Point2D spot = findFreeSpot(map, node, nodeWidth, nodeHeight, getWidth());
+	        node.resizeRelocate(spot.getX(), spot.getY(), nodeWidth, nodeHeight);
+	        map.get(node).setLeft(Boolean.TRUE);
+	    }
+	    */
+	    
+	   
+	    
         //Einbehaltung der Reihenfolge vom hinzufügen
         for(Node node : this.getChildren())
         {
         	double nodeWidth = node.prefWidth(-1);
             double nodeHeight = node.prefHeight(-1);
         	
-            //
             if(!map.get(node).getLeft().booleanValue())
         	{
-            	
-        	
-        		 //hinzufügen
-                 node.resizeRelocate(x_start, y_start, nodeWidth, nodeHeight);
-                 //Anschließend Ablage in bereits zugewiesen
-            	 x_start = x_start + nodeWidth + hGap + 1;
-                 map.get(node).setLeft(Boolean.valueOf(true));
-        		 continue;
+            	//hinzufügen
+                node.resizeRelocate(x_start, y_start, nodeWidth, nodeHeight);
+                //Anschließend Ablage in bereits zugewiesen
+            	x_start = x_start + nodeWidth + hGap + 1;
+                map.get(node).setLeft(Boolean.valueOf(true));
+        		continue;
         	}
             else
             {
-            	
-            	
-            	
-            	
-
-                System.out.println("nodeWidth " + nodeWidth);
-                System.out.println("x  " + node.getLayoutX());
-               // double tempLastPos =  x_start + nodeWidth + hGap + 1;
-                
-                
-                double tempLastPos = x_start + nodeWidth + hGap + 1;
+            	double tempLastPos = x_start + nodeWidth + hGap + 1;
+            	System.out.println("tempLastPos " + tempLastPos +  " mixed " + ((MixedValueComponent)node).getTopValueProperty().get().getValue());
                 //new line if the node goes over the layout width
-                if(tempLastPos > getWidth())
+                if(tempLastPos > totalWidth)
                 {
+                	MixedValueComponent mixedValueCompnent = (MixedValueComponent)node;
+                	System.out.println("mixedValueCompnent index : " + mixedValueCompnent.getTopValueProperty().get().getValue());
+                	
                 	//Nodes are not to check...starts with own
                 	List<Node> notToCheck = new ArrayList<Node>();
                 	notToCheck.add(node);
@@ -233,6 +229,7 @@ public class OwnLayoutPane extends Pane
                 		//minEntry vorhanden?
                 		if(minEntry.isPresent())
                     	{
+                			
                 			//jetzt prüfen ob in der gleichen X-Achse noch weitere Objekte liegen
                     		y_start = minEntry.get().getKey().getLayoutY() + minEntry.get().getKey().getLayoutBounds().getHeight() + vGap + 1;
                     		x_start = minEntry.get().getKey().getLayoutX();
@@ -248,13 +245,12 @@ public class OwnLayoutPane extends Pane
                     					new BoundingBox(entry.getKey().getLayoutX(), entry.getKey().getLayoutY(), entry.getKey().getLayoutBounds().getWidth(), entry.getKey().getLayoutBounds().getHeight()))
                     			    .anyMatch(componentBounds -> futureBoundsBox.intersects(componentBounds)
                     			    );
-                    		
-                    		if(collides)
+                    
+                    		if(collides || futureBoundsBox.getMaxX() > totalWidth)
                     		{
                     			//gefunden node darf nicht verwendet werden.
                     			//System.out.println("collides " + collides);
                     			notToCheck.add(minEntry.get().getKey());
-                    		
                     		}
                     		else
                     			found = true;
@@ -283,7 +279,7 @@ public class OwnLayoutPane extends Pane
         	
         	
         	
-        }*/
+        }
      }
 	
 	

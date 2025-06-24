@@ -39,8 +39,15 @@ public class LayoutContainer extends Application
 		
 		BorderPane borderPane = new BorderPane();
 		borderPane.setStyle("-fx-background-color: #787845");
+
+		/*
+		layoutPane.getChildren().add(getBuildedMixedComponent(0, 128, 156));
+		layoutPane.getChildren().add(getBuildedMixedComponent(1, 132, 110));
+		layoutPane.getChildren().add(getBuildedMixedComponent(2, 109, 150));
+		layoutPane.getChildren().add(getBuildedMixedComponent(3, 93, 109));
+		layoutPane.getChildren().add(getBuildedMixedComponent(4, 124, 156)); 
+		*/
 		
-	
 		for(int i = 0; i < SENSOR_COUNT_START; i++)
 		{
 		    layoutPane.getChildren().add(getBuildedMixedComponent(i));
@@ -96,6 +103,15 @@ public class LayoutContainer extends Application
 		
 	}
 	
+	private Node getBuildedMixedComponent(int index, int prefWidth, int prefHeight) {
+		MixedValueComponent mixedValueComponent = (MixedValueComponent) getBuildedMixedComponent(index);
+		mixedValueComponent.setPrefWidth(prefWidth);
+		mixedValueComponent.setPrefHeight(prefHeight);
+		mixedValueComponent.setMaxWidth(prefWidth);
+		mixedValueComponent.setMinHeight(prefHeight);
+		return mixedValueComponent;
+	}
+
 	private Node getBuildedMixedComponent(int index)
 	{
 		MixedValueComponent sensorPanel = (MixedValueComponent) getBuildedMixedComponent();
