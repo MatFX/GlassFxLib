@@ -186,6 +186,9 @@ public class LayoutContainer extends Application
 				
 				if(!newBounds.isEmpty())
 				{
+					
+					
+				
 					System.out.println("newBounds " + newBounds);
 					double widthComponent = Math.round(newBounds.getWidth() * 10.0) / 10.0;
 					double heightComponent = Math.round(newBounds.getHeight()* 10.0) / 10.0;
@@ -194,6 +197,10 @@ public class LayoutContainer extends Application
 					Value_Color_Component valueComponent = new Value_Color_Component(df.format(widthComponent) + " x " + df.format(heightComponent));
 					   valueComponent.setColor(Color.web("#d6d6c2"));
 					sensorPanel.getValueProperty().set(valueComponent);
+					//sind die Größen die zu Beginn dem Objekt zugewiesen wurden.
+					Value_Color_Component bottomValueComponent = new Value_Color_Component(sensorPanel.getLayoutBounds().getWidth() + " x " + sensorPanel.getLayoutBounds().getHeight());
+					bottomValueComponent.setColor(Color.web("#d6d6c2"));
+					sensorPanel.getBottomValueProperty().set(bottomValueComponent);
 				}
 			}
 	    	
