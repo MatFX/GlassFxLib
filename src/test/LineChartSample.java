@@ -11,6 +11,8 @@ import javafx.stage.Stage;
  
 public class LineChartSample extends Application {
  
+	
+	
     @Override public void start(Stage stage) {
         stage.setTitle("Line Chart Sample");
         //defining the axes
