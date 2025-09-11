@@ -19,6 +19,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import test.layout.model.DebugModel;
 
 public class OwnLayoutPane extends Pane
 {
@@ -29,6 +32,10 @@ public class OwnLayoutPane extends Pane
 	
 	private List<GenericPair<Node, LayoutBox>> layoutList = new ArrayList<GenericPair<Node, LayoutBox>>();
 	
+	/**
+	 * with debug the debugmodel will be used
+	 */
+	private boolean debug = false;
 	
 	private enum ScalingDirection
 	{
@@ -63,6 +70,7 @@ public class OwnLayoutPane extends Pane
 	public OwnLayoutPane()
 	{
 		super();
+		this.debug = false;
 	}
 	
 	public OwnLayoutPane(Node... children)
@@ -123,8 +131,12 @@ public class OwnLayoutPane extends Pane
 		//Breite wird benötigt um zu unterscheiden ob es in die nächste Zeile muss
 		double totalWidth = getWidth() - padding.getLeft() - padding.getRight();
 		
-	    if (getChildren().isEmpty()) return;
-
+	    if (getChildren().isEmpty()) 
+	    {
+	    	
+	    	return;
+	    }
+	    
 	    ScalingDirection scalingDirection = ScalingDirection.No_Changing;
 	    //prüfun in welche Richtung es geht
 	    //von rechts nach links (verkleinerung)
@@ -137,7 +149,7 @@ public class OwnLayoutPane extends Pane
 	    		scalingDirection = ScalingDirection.Maximize;
 	    }
 	    lastWidth = totalWidth;
-    	System.out.println("scalingDirection " + scalingDirection);
+    	//System.out.println("scalingDirection " + scalingDirection);
 	    
 	    this.getChildren().stream().forEach(node -> {
 	    	if(!map.containsKey(node))
@@ -165,10 +177,10 @@ public class OwnLayoutPane extends Pane
 	    	}
 	    	else
 	    	{
-	    		System.out.println("Index " + ((MixedValueComponent)node).getTopValueProperty().get().getValue() +" >> " + map.get(node).getRight() + " on Pane? " + map.get(node).getLeft());
+	    //		System.out.println("Index " + ((MixedValueComponent)node).getTopValueProperty().get().getValue() +" >> " + map.get(node).getRight() + " on Pane? " + map.get(node).getLeft());
 	    	}
 	    });
-	    System.out.println("w: "+ totalWidth +  " ------ h: " +this.getHeight()+"------------------------------------------------------------");
+	 //   System.out.println("w: "+ totalWidth +  " ------ h: " +this.getHeight()+"------------------------------------------------------------");
 	    
 		double x_start = hGap + 1;
 	    double y_start = vGap + 1;
@@ -189,9 +201,10 @@ public class OwnLayoutPane extends Pane
         //Einbehaltung der Reihenfolge vom hinzufügen
         for(Node node : this.getChildren())
         {
+        	//System.out.println("Index " + ((MixedValueComponent)node).getTopValueProperty().get().getValue());
         	double nodeWidth = node.prefWidth(-1);
             double nodeHeight = node.prefHeight(-1);
-        	
+            
             if(!map.get(node).getLeft().booleanValue())
         	{
             	//hinzufügen
@@ -203,13 +216,18 @@ public class OwnLayoutPane extends Pane
         	}
             else
             {
+            	
+            	
+            	
             	double tempLastPos = x_start + nodeWidth + hGap + 1;
-            	System.out.println("tempLastPos " + tempLastPos +  " mixed " + ((MixedValueComponent)node).getTopValueProperty().get().getValue());
+            	//System.out.println("tempLastPos " + tempLastPos +  " mixed " + ((MixedValueComponent)node).getTopValueProperty().get().getValue());
                 //new line if the node goes over the layout width
-                if(tempLastPos > totalWidth)
+                
+            	if(tempLastPos > totalWidth)
                 {
                 	MixedValueComponent mixedValueCompnent = (MixedValueComponent)node;
-                	System.out.println("mixedValueCompnent index : " + mixedValueCompnent.getTopValueProperty().get().getValue());
+                	if(mixedValueCompnent.getTopValueProperty().get().getValue().equals("3"))
+	                	System.out.println("mixedValueCompnent index : " + mixedValueCompnent.getTopValueProperty().get().getValue());
                 	
                 	//Nodes are not to check...starts with own
                 	List<Node> notToCheck = new ArrayList<Node>();
@@ -236,6 +254,20 @@ public class OwnLayoutPane extends Pane
                     		
                     		//mit den Positionen prüfen ob  damit eine Node berührt wird
                     		BoundingBox futureBoundsBox =  new BoundingBox(x_start, y_start, nodeWidth + hGap + 1, nodeHeight);
+                    		if(debug)
+                    			DebugModel.getInstance().setBoundingBox(futureBoundsBox);
+                    		
+                    		
+                    		
+//                    		rectangle.setX(x_start);
+//                    		rectangle.setY(y_start);
+//                    		rectangle.setWidth(nodeWidth + hGap + 1);
+//                    		rectangle.setHeight(nodeHeight);
+//                    		rectangle.setStroke(Color.DODGERBLUE);
+//                    		double strokeWidth = 5;
+//                    		rectangle.setStrokeWidth(strokeWidth);
+                    		
+                    		
                     		
                     		boolean collides = map.entrySet().stream()
                     				.filter(entry -> entry.getValue().getLeft().booleanValue() 
@@ -249,7 +281,7 @@ public class OwnLayoutPane extends Pane
                     		if(collides || futureBoundsBox.getMaxX() > totalWidth)
                     		{
                     			//gefunden node darf nicht verwendet werden.
-                    			//System.out.println("collides " + collides);
+                    			System.out.println("collides " + collides);
                     			notToCheck.add(minEntry.get().getKey());
                     		}
                     		else
@@ -264,9 +296,8 @@ public class OwnLayoutPane extends Pane
                 	
               
                 }
-            	//System.out.println("MixedValueComponent " + ((MixedValueComponent)node).getValueProperty().get().getValue());
-            	
-                //hinzufügen
+                
+            	//hinzufügen
                 node.resizeRelocate(x_start, y_start, nodeWidth, nodeHeight);
                 //Anschließend Ablage in bereits zugewiesen
                 
@@ -367,6 +398,11 @@ public class OwnLayoutPane extends Pane
 
 	public LayoutBox getLayoutBox(Node node) {
 		return map.get(node).getRight();
+	}
+
+	public void setDebug(boolean debug) 
+	{
+		this.debug = debug;
 	}
     
 }
