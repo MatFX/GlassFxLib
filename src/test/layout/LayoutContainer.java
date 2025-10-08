@@ -25,13 +25,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import test.layout.model.DebugModel;
 
 public class LayoutContainer extends Application
 {
 	private OwnLayoutPane layoutPane = new OwnLayoutPane();
+	
+	private StackPane stackPane = new StackPane();
 	
 	private final int SENSOR_COUNT_START = 5;
 	
@@ -42,6 +48,8 @@ public class LayoutContainer extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
+		
+		layoutPane.setDebug(true);
 		layoutPane.setStyle("-fx-background-color: #784545");
 	
 		
@@ -53,6 +61,7 @@ public class LayoutContainer extends Application
 		layoutPane.getChildren().add(getBuildedMixedComponent(2, 80, 131));
 		layoutPane.getChildren().add(getBuildedMixedComponent(3, 121, 153));
 		layoutPane.getChildren().add(getBuildedMixedComponent(4, 129, 122));
+		
 
 		if(layoutPane.getChildren().size() == 0)
 		{
@@ -65,10 +74,39 @@ public class LayoutContainer extends Application
 		
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setFitToWidth(true);
-		
 		scrollPane.setContent(layoutPane);
 		
-		borderPane.setCenter(scrollPane);
+		//Overlay, to control the findig area for the ui component
+		Pane overlay = new Pane();
+		//overlay.setStyle("-fx-background-color: #FF000044");
+		overlay.setMinWidth(150);
+		overlay.setMinHeight(150);
+		Rectangle rectangle = new Rectangle();
+		rectangle.setFill(Color.web("#00000000"));
+		
+		
+		
+		rectangle.setStroke(Color.CYAN);
+		rectangle.setStrokeWidth(3);
+		
+		
+		rectangle.xProperty().bind(DebugModel.getInstance().getxProperty());
+		rectangle.yProperty().bind(DebugModel.getInstance().getyProperty());
+		rectangle.widthProperty().bind(DebugModel.getInstance().getwProperty());
+		rectangle.heightProperty().bind(DebugModel.getInstance().gethProperty());
+		
+		//rectangle.setX(50);
+		//rectangle.setY(50);
+		//rectangle.setWidth(150);
+		//rectangle.setHeight(150);
+		
+		
+		overlay.getChildren().add(rectangle);
+		
+		stackPane.getChildren().add(0, scrollPane);
+		stackPane.getChildren().add(1, overlay);
+		
+		borderPane.setCenter(stackPane);
 		
 		Scene scene = new Scene(borderPane, 800, 600);
 		scene.getStylesheets().add("style.css");
@@ -186,10 +224,7 @@ public class LayoutContainer extends Application
 				
 				if(!newBounds.isEmpty())
 				{
-					
-					
-				
-					System.out.println("newBounds " + newBounds);
+					//System.out.println("newBounds " + newBounds);
 					double widthComponent = Math.round(newBounds.getWidth() * 10.0) / 10.0;
 					double heightComponent = Math.round(newBounds.getHeight()* 10.0) / 10.0;
 					

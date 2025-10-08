@@ -103,7 +103,6 @@ public class TestLayoutContainer2 extends Application
 			    sensorPanel.setMaxWidth(prefWidth);
 			    sensorPanel.setMinHeight(prefHeight);
 			    masonryPane.getJFXMasonryPane().getChildren().add(sensorPanel);
-				System.out.println("after add");
 			    //showBoundings( masonryPane.getChildren());
 				// Beim nächsten Layout-Zyklus wird die BoundingBox korrekt sein
 				Platform.runLater(() -> {
