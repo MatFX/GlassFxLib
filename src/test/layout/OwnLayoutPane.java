@@ -10,7 +10,6 @@ import java.util.Optional;
 import eu.matfx.component.sensor.MixedValueComponent;
 import eu.matfx.tools.GenericPair;
 import eu.matfx.tools.LayoutBox;
-import eu.matfx.tools.LayoutBoxComparator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.BoundingBox;
